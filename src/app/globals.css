@@ -1,26 +1,894 @@
 @import "tailwindcss";
 
+/* =====================================================================
+   MOD — registro de prancheta. Fundo de viewport, traço vetorial,
+   dado em monoespaçada.
+
+   As quatro cores continuam vindo das capas de destaque do
+   @arquitetura.mod (OBRAS #9E8475 · SERVIÇOS #5C7862 · CRIAÇÃO #648398),
+   levantadas em luminância para viverem sobre preto — no CAD são as cores
+   de layer, e é assim que elas são usadas aqui.
+   ===================================================================== */
+
+@theme {
+  /* Os tokens apontam para variáveis de tema; os valores reais ficam nos
+     blocos :root abaixo. Três planos que se distinguem de olho:
+     rail (lateral) → viewport (chão) → painel (o que está sobre a mesa). */
+  --color-rail: var(--t-rail);
+  --color-viewport: var(--t-viewport);
+  --color-painel: var(--t-painel);
+  --color-painel-alto: var(--t-painel-alto);
+  --color-traco: var(--t-traco);
+  --color-traco-forte: var(--t-traco-forte);
+
+  --color-tinta: var(--t-tinta);
+  --color-tinta-media: var(--t-tinta-media);
+  --color-tinta-fraca: var(--t-tinta-fraca);
+
+  --color-argila: var(--t-argila);
+  --color-argila-fundo: var(--t-argila-fundo);
+  --color-verde: var(--t-verde);
+  --color-verde-fundo: var(--t-verde-fundo);
+  --color-azul: var(--t-azul);
+  --color-azul-fundo: var(--t-azul-fundo);
+  --color-ferrugem: var(--t-ferrugem);
+  --color-ferrugem-fundo: var(--t-ferrugem-fundo);
+
+  /* traço do selo, que troca junto com o tema */
+  --color-selo-feito: var(--t-selo-feito);
+  --color-selo-ativo: var(--t-selo-ativo);
+  --color-selo-vazio: var(--t-selo-vazio);
+
+
+  --font-display: var(--fonte-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--fonte-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--fonte-plex-mono), ui-monospace, monospace;
+
+  --radius-mod: 2px;
+}
+
+/* =====================================================================
+   STATUS — escala de tinta, não paleta.
+
+   O estado não é uma cor arbitrária: é quanto de tinta já foi lançada.
+   Quanto mais adiantado, mais escuro o chip — até fechar em tinta cheia.
+   O único acento que sobra é o alerta, porque atraso é risco e risco não
+   pode se confundir com progresso.
+
+   Ficam fora do @theme de propósito: são consumidas via var() montada em
+   template string, e o Tailwind v4 poda variável de tema que ele não vê
+   escrita literalmente no código.
+   ===================================================================== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-st-nulo: #e6e2d9;
+  --color-st-nulo-tx: #4b463f;
+  --color-st-inicio: #cdc7bb;
+  --color-st-inicio-tx: #2c2823;
+  --color-st-meio: #a9a294;
+  --color-st-meio-tx: #17140f;
+  --color-st-avanco: #6e675b;
+  --color-st-avanco-tx: #ffffff;
+  --color-st-pronto: #16130f;
+  --color-st-pronto-tx: #f3f0ea;
+  --color-st-alerta: #a03418;
+  --color-st-alerta-tx: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root[data-tema="escuro"] {
+  --color-st-nulo: #33383b;
+  --color-st-nulo-tx: #b6bbbd;
+  --color-st-inicio: #4a5155;
+  --color-st-inicio-tx: #e6e9ea;
+  --color-st-meio: #6f7876;
+  --color-st-meio-tx: #ffffff;
+  --color-st-avanco: #a9aaa2;
+  --color-st-avanco-tx: #14120f;
+  --color-st-pronto: #f0ece4;
+  --color-st-pronto-tx: #14120f;
+  --color-st-alerta: #e2603c;
+  --color-st-alerta-tx: #16130f;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* =====================================================================
+   PRANCHA (padrão) — uma planta impressa é traço escuro sobre papel.
+   O papel vem do off-white das capas de destaque da MOD (#F2F2F2),
+   aquecido; a "tinta" é o preto de nanquim.
+   ===================================================================== */
+:root {
+  color-scheme: light;
+
+  --t-rail: #e6e2da;
+  --t-viewport: #f3f0ea;
+  --t-painel: #ffffff;
+  --t-painel-alto: #fbf9f5;
+  --t-traco: #d6d0c6;
+  --t-traco-forte: #a49c90;
+
+  /* contraste sobre o papel: tinta 15.9:1, média 8.2:1, fraca 4.9:1 */
+  --t-tinta: #16130f;
+  --t-tinta-media: #524d46;
+  --t-tinta-fraca: #777066;
+
+  --t-argila: #7d5f4c;
+  --t-argila-fundo: #f0e7e0;
+  --t-verde: #3a5442;
+  --t-verde-fundo: #e3ebe4;
+  --t-azul: #3a5a70;
+  --t-azul-fundo: #e2ebf0;
+  --t-ferrugem: #a03418;
+  --t-ferrugem-fundo: #f7e2db;
+
+  --t-selo-feito: #16130f;
+  --t-selo-ativo: #9e7a5f;
+  --t-selo-vazio: #cbc4b8;
+
+  --acento: var(--color-tinta);
+  --acento-fundo: var(--color-painel);
+}
+
+/* =====================================================================
+   VIEWPORT — o CAD aberto, para trabalhar à noite ou em tela grande.
+   ===================================================================== */
+:root[data-tema="escuro"] {
+  color-scheme: dark;
+
+  --t-rail: #0e1012;
+  --t-viewport: #1a1d1f;
+  --t-painel: #24282b;
+  --t-painel-alto: #2e3337;
+  --t-traco: #3a4044;
+  --t-traco-forte: #596166;
+
+  --t-tinta: #f0ece4;
+  --t-tinta-media: #bcc0be;
+  --t-tinta-fraca: #8d9290;
+
+  --t-argila: #d9b79f;
+  --t-argila-fundo: #38291f;
+  --t-verde: #92bd9c;
+  --t-verde-fundo: #1f3325;
+  --t-azul: #93bcd6;
+  --t-azul-fundo: #1d2f3a;
+  --t-ferrugem: #f07555;
+  --t-ferrugem-fundo: #3d1d16;
+
+  --t-selo-feito: #f0ece4;
+  --t-selo-ativo: #d9b79f;
+  --t-selo-vazio: #4c5357;
+}
+
+[data-secao="comercial"] {
+  --acento: var(--color-azul);
+  --acento-fundo: var(--color-azul-fundo);
+}
+
+[data-secao="projetos"] {
+  --acento: var(--color-argila);
+  --acento-fundo: var(--color-argila-fundo);
+}
+
+[data-secao="clientes"] {
+  --acento: var(--color-verde);
+  --acento-fundo: var(--color-verde-fundo);
+}
+
+html,
+body {
+  background: var(--color-viewport);
+}
+
+/* A lateral é o plano mais fundo: separa por tom, não por linha. */
+.rail {
+  background: var(--color-rail);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Estrutura é monoespaçada: rótulo de coluna, cabeçalho, badge. Numa
+   prancheta o que é anotação técnica não usa a face do título. */
+.rotulo {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-tinta-fraca);
+}
+
+.dado {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Título de página: o salto de escala é a personalidade. Jost 200 grande e
+   apertada contra o rótulo mono minúsculo. */
+.titulo {
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-tinta);
+}
+
+/* Bloco do número da folha: tinta cheia, número vazado. Mesma linguagem da
+   aba e do carimbo, e serve de âncora à esquerda da faixa. */
+.folha-num {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  min-width: 46px;
+  padding: 4px 8px 5px;
+  background: var(--color-tinta);
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  line-height: 1.1;
+  color: var(--color-painel);
+}
+
+.folha-num b {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.folha-num span {
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  opacity: 0.65;
+}
+
+/* Linha-guia pontilhada: em prancha, a chamada atravessa o vazio até o dado.
+   Aqui liga o título às ações e evita que a faixa fique com buraco no meio. */
+.guia {
+  flex: 1 1 auto;
+  min-width: 24px;
+  height: 1px;
+  align-self: center;
+  margin-top: 4px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--color-traco-forte) 0 2px,
+    transparent 2px 7px
+  );
+}
+
+/* =====================================================================
+   DINHEIRO
+   O sistema existe porque medição vira parcela e parcela não é cobrada.
+   Então valor não é dado de rodapé: é manchete. Cifrão minúsculo em mono,
+   número grande em Jost leve e tabular.
+   ===================================================================== */
+.valor {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+  line-height: 1;
+  color: var(--color-tinta);
+}
+
+.valor-cifra {
+  font-family: var(--font-mono);
+  font-size: 0.5em;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-tinta-fraca);
+  transform: translateY(-0.15em);
+}
+
+/* =====================================================================
+   FOLHA EM BRANCO
+   Bloco sem conteúdo não é frase solta no vazio: é folha ainda não
+   desenhada, com a anotação na margem.
+   ===================================================================== */
+.folha-branca {
+  border: 1px dashed var(--color-traco-forte);
+  border-radius: 2px;
+  padding: 34px 24px;
+  text-align: center;
+  color: var(--color-tinta-fraca);
+  font-size: 14px;
+}
+
+.folha-branca-nota {
+  margin-top: 7px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-tinta-fraca);
+  opacity: 0.75;
+}
+
+/* =====================================================================
+   CADEIA DE COTAS
+   O cronograma desenhado: cota entre etapas com ticks nas extremidades,
+   dias escritos em cima da linha, medição pendurada na mesma vertical.
+   ===================================================================== */
+.cota-linha {
+  position: relative;
+  height: 1px;
+  background: var(--color-traco-forte);
+}
+
+.cota-tick {
+  width: 1px;
+  height: 9px;
+  background: var(--color-traco-forte);
+}
+
+.cota-haste {
+  width: 1px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--color-traco-forte) 0 2px,
+    transparent 2px 5px
+  );
+}
+
+/* Campo dentro de célula de carimbo: sem moldura própria, a célula já é a
+   moldura. O foco acende a célula inteira. */
+.campo-cel {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--color-tinta);
+}
+
+.campo-cel::placeholder {
+  color: var(--color-tinta-fraca);
+}
+
+.campo-cel:focus {
+  outline: none;
+}
+
+.carimbo-cel:focus-within {
+  background: var(--color-painel-alto);
+  box-shadow: inset 2px 0 0 0 var(--color-tinta);
+}
+
+/* =====================================================================
+   ROLAGEM SEM BARRA
+   Nada de barra atravessando a prancha: o conteúdo se move puxando com o
+   ponteiro ou com o dedo. A rolagem continua existindo, só não aparece.
+   ===================================================================== */
+.sem-barra {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sem-barra::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/* Puxar de qualquer vazio move a folha para o lado. */
+.arrastavel {
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.arrastavel.puxando {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* Ação secundária no registro do sistema: contorno fino, caixa-alta mono. */
+.acao {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 11px 6px;
+  border: 1px solid var(--color-traco-forte);
+  border-radius: 2px;
+  color: var(--color-tinta-media);
+  white-space: nowrap;
+  transition:
+    border-color 130ms ease,
+    color 130ms ease;
+}
+
+.acao:hover {
+  border-color: var(--color-tinta);
+  color: var(--color-tinta);
+}
+
+.acao-cheia {
+  background: var(--color-tinta);
+  border-color: var(--color-tinta);
+  color: var(--color-painel);
+}
+
+.acao-cheia:hover {
+  color: var(--color-painel);
+  opacity: 0.86;
+}
+
+/* Nome de registro: Grotesk com peso, é o que se lê varrendo a lista. */
+.nome {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Linha de registro. O marcador é a mira do cursor de CAD. */
+.linha {
+  border-bottom: 1px solid var(--color-traco);
+  transition:
+    background-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.linha:hover {
+  background-color: var(--color-painel);
+  box-shadow: inset 2px 0 0 0 var(--acento);
+}
+
+.linha:focus-visible {
+  outline: none;
+  background-color: var(--color-painel);
+  box-shadow:
+    inset 2px 0 0 0 var(--acento),
+    0 0 0 1px var(--acento);
+}
+
+.linha .mira {
+  color: var(--color-tinta-fraca);
+  transition: color 120ms ease;
+}
+
+.linha:hover .mira {
+  color: var(--acento);
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 1px solid var(--acento);
+  outline-offset: 2px;
+}
+
+.campo {
+  width: 100%;
+  background: var(--color-painel);
+  border: 1px solid var(--color-traco);
+  border-radius: var(--radius-mod);
+  padding: 9px 11px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-tinta);
+  transition: border-color 140ms ease;
+}
+
+.campo::placeholder {
+  color: var(--color-tinta-fraca);
+}
+
+.campo:focus {
+  outline: none;
+  border-color: var(--acento);
+}
+
+select.campo {
+  appearance: none;
+  cursor: pointer;
+}
+
+/* `.campo` fixa width:100% e, sendo declarada depois do @import do Tailwind,
+   ganha de w-auto. Esta classe existe para os campos que vivem dentro de uma
+   linha e não podem esticar. */
+.campo-auto {
+  width: auto;
+  max-width: 100%;
+}
+
+/* =====================================================================
+   O CARIMBO
+   Toda prancha de arquitetura tem um carimbo: o quadro de células no canto
+   com escritório, obra, escala, data, folha e revisão. É o artefato gráfico
+   mais reconhecível do ofício e ele carrega dado — então aqui ele carrega
+   dado de verdade, não é moldura decorativa.
+   ===================================================================== */
+
+/* A borda externa vem do topo/esquerda do quadro e do direito/baixo das
+   células — assim nenhuma linha fica dobrada nas bordas. */
+.carimbo {
+  display: grid;
+  border-top: 1.5px solid var(--color-tinta);
+  border-left: 1.5px solid var(--color-tinta);
+  background: var(--color-painel);
+}
+
+/* O bloco de marca que abre a tira: tinta cheia, texto vazado. É o que
+   ancora o carimbo e o que identifica de quem é a prancha. */
+.carimbo-marca {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 5px 16px 6px;
+  background: var(--color-tinta);
+  border-right: 1.5px solid var(--color-tinta);
+  border-bottom: 1.5px solid var(--color-tinta);
+}
+
+.carimbo-marca-nome {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  color: var(--color-painel);
+}
+
+.carimbo-marca-sub {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-painel);
+  opacity: 0.68;
+}
+
+.carimbo-cel {
+  border-right: 1.5px solid var(--color-tinta);
+  border-bottom: 1.5px solid var(--color-tinta);
+  padding: 5px 11px 6px;
+  min-width: 0;
+}
+
+.carimbo-rot {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-tinta-fraca);
+  white-space: nowrap;
+}
+
+.carimbo-val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-tinta);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.carimbo-val-largo {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 19px;
+  letter-spacing: 0.02em;
+}
+
+/* =====================================================================
+   A FOLHA
+   A janela inteira é uma prancha: moldura impressa, margem com marcas de
+   dobra, área de desenho que rola por dentro, carimbo travado no canto
+   inferior direito e abas de folha embaixo — como as abas de layout do CAD.
+   ===================================================================== */
+
+:root {
+  --folha-borda: 13px;
+  --folha-abas: 47px;
+  --folha-margem: 22px;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --folha-borda: 7px;
+    --folha-margem: 12px;
+  }
+}
+
+.folha-quadro {
+  position: fixed;
+  top: var(--folha-borda);
+  right: var(--folha-borda);
+  bottom: calc(var(--folha-borda) + var(--folha-abas));
+  left: var(--folha-borda);
+  border: 1px solid var(--color-traco-forte);
+  background: var(--color-painel);
+  display: flex;
+  flex-direction: column;
+}
+
+/* A faixa de cabeçalho da margem: onde vive o timbre e a conta. */
+.folha-timbre {
+  border-bottom: 1px solid var(--color-traco);
+  flex-shrink: 0;
+}
+
+/* Área de desenho: o único lugar que rola, e sem barra à vista. */
+.folha-desenho {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.folha-desenho::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+/* Marcas de dobra da margem, nas quatro bordas internas. */
+.folha-marca {
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--color-traco-forte) 0 1px,
+    transparent 1px 30px
+  );
+  height: 4px;
+}
+
+/* O carimbo mora na margem inferior da folha, nunca sobre o desenho. A faixa
+   é opaca e ocupa a largura da prancha; o quadro em si fica encostado à
+   direita, como no original. */
+.carimbo-fixo {
+  position: fixed;
+  left: calc(var(--folha-borda) + 1px);
+  right: calc(var(--folha-borda) + 1px);
+  bottom: calc(var(--folha-borda) + var(--folha-abas));
+  z-index: 20;
+  padding: 0 var(--folha-margem) 10px;
+  background: var(--color-painel);
+}
+
+@media (max-width: 1023px) {
+  /* Em tela pequena a tira comeria o desenho: volta pro fluxo, em 2 colunas. */
+  .carimbo-fixo {
+    position: static;
+    padding: 0;
+    margin-bottom: 28px;
+  }
+
+  .carimbo-fixo .carimbo {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* =====================================================================
+   ABAS = separadores de um conjunto de pranchas.
+   Aresta cortada em diagonal como divisória de pasta, número da folha em
+   cima do nome, e a ativa emerge do maço enquanto as outras ficam recuadas.
+
+   A borda é feita com a casca pintada na cor do traço e o miolo 1px menor:
+   clip-path corta borda de verdade, então a borda vira fundo.
+   ===================================================================== */
+.aba {
+  display: block;
+  min-width: 116px;
+  margin-top: 5px;
+  padding: 1px 0 0 1px;
+  background: var(--color-traco-forte);
+  clip-path: polygon(11px 0, 100% 0, 100% 100%, 0 100%);
+  transition: margin-top 140ms ease;
+}
+
+.aba-int {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  height: 100%;
+  padding: 5px 16px 8px 20px;
+  background: var(--color-rail);
+  clip-path: polygon(11px 0, 100% 0, 100% 100%, 0 100%);
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.aba-num {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--color-tinta-fraca);
+}
+
+.aba-nome {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.1;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--color-tinta-fraca);
+  white-space: nowrap;
+  transition: color 140ms ease;
+}
+
+.aba:hover .aba-nome {
+  color: var(--color-tinta);
+}
+
+/* A folha aberta sobe até encostar na prancha e vira o mesmo papel. */
+.aba[aria-current="page"] {
+  margin-top: 0;
+}
+
+.aba[aria-current="page"] .aba-int {
+  background: var(--color-painel);
+}
+
+.aba[aria-current="page"] .aba-nome {
+  color: var(--color-tinta);
+  font-weight: 500;
+}
+
+.aba[aria-current="page"] .aba-num {
+  color: var(--color-tinta-media);
+}
+
+.aba:focus-visible {
+  outline: 2px solid var(--color-tinta);
+  outline-offset: -2px;
+}
+
+/* Hachura de corte a 45°, usada onde o prazo estourou. Em desenho técnico
+   hachura marca o que foi cortado — aqui marca o que furou. */
+.hachura {
+  background-image: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--color-ferrugem) 20%, transparent) 0 2px,
+    transparent 2px 7px
+  );
+}
+
+/* =====================================================================
+   CHIP DE STATUS
+   Pastilha chapada: o status é a cor, não a borda. É o que faz um quadro
+   de produção ser lido de longe.
+   ===================================================================== */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 9px 4px;
+  border-radius: 3px;
+  white-space: nowrap;
+  line-height: 1.25;
+  background: var(--chip-bg, var(--color-st-nulo));
+  color: var(--chip-tx, var(--color-st-nulo-tx));
+}
+
+/* Chip hachurado: parado esperando o cliente. Em desenho, hachura marca o
+   que está em corte — aqui marca o que está travado. */
+.chip-hachura {
+  background-image: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--chip-tx) 26%, transparent) 0 1px,
+    transparent 1px 6px
+  );
+}
+
+/* Chip que também é controle (o select de status da etapa). */
+select.chip {
+  appearance: none;
+  cursor: pointer;
+  border: 0;
+  padding-right: 24px;
+  background-image: linear-gradient(
+      45deg,
+      transparent 50%,
+      currentColor 50% calc(50% + 1.2px),
+      transparent calc(50% + 1.2px)
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 50%,
+      currentColor 50% calc(50% + 1.2px),
+      transparent calc(50% + 1.2px)
+    );
+  background-position:
+    right 12px center,
+    right 8px center;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  box-shadow: inset 0 0 0 999px var(--chip-bg, var(--color-st-nulo));
+}
+
+/* Barra de cor do bloco: a faixa do grupo, como num quadro de produção. */
+.barra-grupo {
+  height: 22px;
+  width: 5px;
+  border-radius: 3px;
+  background: var(--chip-bg, var(--color-tinta));
+}
+
+/* Marca de registro: a cruz de alinhamento da folha de desenho. */
+.registro::before,
+.registro::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-color: var(--color-traco-forte);
+  border-style: solid;
+}
+
+.registro::before {
+  top: 0;
+  left: 0;
+  border-width: 1px 0 0 1px;
+}
+
+.registro::after {
+  bottom: 0;
+  right: 0;
+  border-width: 0 1px 1px 0;
+}
+
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.escada > * {
+  opacity: 0;
+  animation: subir 640ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes selo-anel {
+  from {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .escada > * {
+    opacity: 1;
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
