@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { criarClienteServidor } from "@/lib/supabase/server";
 import { sair } from "@/app/login/actions";
 import { MarcaMod } from "@/components/marca-mod";
+import { AneisMod } from "@/components/aneis-mod";
 import { AbasFolha, CascaSecao } from "@/components/abas-folha";
 import { TrocaTema } from "@/components/troca-tema";
 import { MargemFolha } from "@/components/carimbo";
@@ -28,8 +29,16 @@ export default async function AppLayout({
     <CascaSecao>
       {/* A janela inteira é a prancha. Nada rola fora da área de desenho. */}
       <div className="folha-quadro">
-        <div className="folha-timbre">
-          <div className="flex items-center justify-between gap-5 px-[var(--folha-margem)] py-3">
+        <div className="folha-timbre relative overflow-hidden">
+          {/* A textura dos backgrounds do manual: anéis sangrando na borda
+              direita da capa, quase invisíveis — presença, não ruído. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-28 top-1/2 w-[440px] -translate-y-1/2 text-tinta opacity-[0.07]"
+          >
+            <AneisMod className="h-auto w-full" />
+          </div>
+          <div className="relative flex items-center justify-between gap-5 px-[var(--folha-margem)] py-2.5">
             <MarcaMod />
             <div className="flex items-center gap-5">
               <TrocaTema />

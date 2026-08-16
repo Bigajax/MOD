@@ -19,9 +19,9 @@ import {
   converterEmProjeto,
 } from "@/actions/comercial";
 import { brl, diasDesde, hojeISO } from "@/lib/format";
-import { TOM_COMERCIAL, tomParado } from "@/lib/status";
-import { Selo, TituloPagina } from "@/components/bloco";
+import { TituloPagina } from "@/components/bloco";
 import { Valor } from "@/components/valor";
+import { AneisMod } from "@/components/aneis-mod";
 import { Rolagem } from "@/components/rolagem";
 import { ModalGanho } from "./modal-ganho";
 import { ModalPerda } from "./modal-perda";
@@ -65,8 +65,8 @@ function Card({
   arrastando?: boolean;
 }) {
   const parado = diasDesde(card.ultimo_contato);
-  // R4 — 7 dias vira aviso, 14 vira alarme.
-  const tom = tomParado(parado);
+  // R4 — 14 dias sem contato esfria o card inteiro para ferrugem.
+  const cor = parado >= 14 ? "ferrugem" : "azul";
 
   return (
     <article
@@ -74,33 +74,35 @@ function Card({
         arrastando ? "opacity-40" : ""
       }`}
     >
-      {/* faixa de status na cabeça do card, como num quadro de produção */}
+      {/* cabeça = miniatura do cartão de cor do manual: fundo da família,
+          anéis no canto direito, nome na cor e o índice de dias no canto */}
       <div
-        className="h-1"
-        style={{ background: `var(--color-st-${tom})` }}
-        aria-hidden
-      />
-      <div className="px-3 pb-3 pt-2.5">
-        <p className="nome truncate text-[13px] leading-snug text-tinta">
-          {card.clientes?.nome ?? "Sem cliente"}
-        </p>
-        <p className="mt-1 line-clamp-2 text-[12px] leading-snug text-tinta-media">
+        className="relative overflow-hidden px-3 pb-2 pt-2"
+        style={{
+          background: `var(--color-${cor}-fundo)`,
+          color: `var(--color-${cor})`,
+        }}
+      >
+        <AneisMod className="pointer-events-none absolute -right-10 top-1/2 w-40 -translate-y-1/2 opacity-[0.22]" />
+        <div className="relative flex items-baseline justify-between gap-2">
+          <p className="nome truncate text-[13px] leading-snug">
+            {card.clientes?.nome ?? "Sem cliente"}
+          </p>
+          <span className="dado shrink-0 text-[10px] tracking-[0.08em]">
+            {String(parado).padStart(2, "0")}d
+          </span>
+        </div>
+      </div>
+      <div className="px-3 pb-2.5 pt-2">
+        <p className="line-clamp-2 text-[12px] leading-snug text-tinta-media">
           {card.titulo}
         </p>
       </div>
 
       {/* pé de carimbo: mesma construção rulada do carimbo grande */}
-      <div className="grid grid-cols-[1fr_auto] border-t border-tinta">
-        <div className="border-r border-tinta px-3 py-1.5">
-          <p className="carimbo-rot">Proposta</p>
-          <Valor reais={card.valor_proposta} tamanho={17} />
-        </div>
-        <div className="px-3 py-1.5">
-          <p className="carimbo-rot">Parado</p>
-          <p className="mt-0.5">
-            <Selo tom={tom}>{String(parado).padStart(2, "0")}d</Selo>
-          </p>
-        </div>
+      <div className="border-t border-tinta px-3 py-1.5">
+        <p className="carimbo-rot">Proposta</p>
+        <Valor reais={card.valor_proposta} tamanho={17} />
       </div>
     </article>
   );
@@ -147,13 +149,11 @@ function Coluna({
   id,
   rotulo,
   cards,
-  tom,
   onAbrir,
 }: {
   id: string;
   rotulo: string;
   cards: CardOportunidade[];
-  tom: string;
   onAbrir: (card: CardOportunidade) => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id });
@@ -161,12 +161,13 @@ function Coluna({
 
   return (
     <div className="flex w-[204px] shrink-0 flex-col overflow-hidden rounded-mod border border-traco bg-rail">
-      {/* cabeçalho chapado na cor da etapa: o funil vira rampa de cor */}
+      {/* cabeçalho chapado na rampa de Céu: quanto mais adiantada a etapa,
+          mais fundo o azul — Ganho fecha em tinta */}
       <div
         className="px-3 py-2.5"
         style={{
-          background: `var(--color-st-${tom})`,
-          color: `var(--color-st-${tom}-tx)`,
+          background: `var(--color-funil-${id})`,
+          color: `var(--color-funil-${id}-tx)`,
         }}
       >
         <div className="flex items-baseline justify-between gap-2">
@@ -346,7 +347,6 @@ export function Quadro({
               key={coluna.id}
               id={coluna.id}
               rotulo={coluna.rotulo}
-              tom={TOM_COMERCIAL[coluna.id] ?? "nulo"}
               cards={sincronizados.filter((c) => c.etapa === coluna.id)}
               onAbrir={setFicha}
             />

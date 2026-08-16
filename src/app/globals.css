@@ -4,10 +4,17 @@
    MOD — registro de prancheta. Fundo de viewport, traço vetorial,
    dado em monoespaçada.
 
-   As quatro cores continuam vindo das capas de destaque do
-   @arquitetura.mod (OBRAS #9E8475 · SERVIÇOS #5C7862 · CRIAÇÃO #648398),
-   levantadas em luminância para viverem sobre preto — no CAD são as cores
-   de layer, e é assim que elas são usadas aqui.
+   Cores do Manual de Uso da Marca (seção 03):
+   principais  → MOD White #F4F4F4 · MOD Grey #989898 · MOD Black #1C1C1C
+   digitais    → MOD Céu #70849C/#A7B5C4/#DEE6EC
+                 MOD Natureza #637562/#AFBCAF/#DCE6DD
+                 MOD Terra #907D6D/#C1B5A9/#F3EDE5
+   O manual manda: neutros carregam a marca; Céu, Natureza e Terra são
+   exclusivamente digitais, para dar personalidade e destacar elementos —
+   exatamente o papel dos acentos de seção aqui. Os tons 01 descem de
+   luminância para virarem texto acessível; os tons 03 entram literais
+   como fundo; os 02 são os acentos do tema escuro, também literais.
+   Ferrugem é o único fora do manual: alerta é semáforo, não marca.
    ===================================================================== */
 
 @theme {
@@ -40,9 +47,13 @@
   --color-selo-vazio: var(--t-selo-vazio);
 
 
-  --font-display: var(--fonte-jost), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--fonte-grotesk), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--fonte-plex-mono), ui-monospace, monospace;
+  /* Tipografia do manual (seção 04), via pares livres carregados no layout:
+     display = Kiona (títulos e valores), sans = Champagne & Limousines
+     (textos corridos). O slot "mono" também aponta para o Kiona: no manual
+     não existe monoespaçada — rótulo e dado são caixa-alta espaçada. */
+  --font-display: var(--fonte-titulo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--fonte-texto), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--fonte-titulo), ui-sans-serif, system-ui, sans-serif;
 
   --radius-mod: 2px;
 }
@@ -60,67 +71,119 @@
    escrita literalmente no código.
    ===================================================================== */
 :root {
-  --color-st-nulo: #e6e2d9;
-  --color-st-nulo-tx: #4b463f;
-  --color-st-inicio: #cdc7bb;
-  --color-st-inicio-tx: #2c2823;
-  --color-st-meio: #a9a294;
-  --color-st-meio-tx: #17140f;
-  --color-st-avanco: #6e675b;
+  --color-st-nulo: #e4e4e4;
+  --color-st-nulo-tx: #454545;
+  --color-st-inicio: #c9c9c9;
+  --color-st-inicio-tx: #262626;
+  --color-st-meio: #989898; /* MOD Grey literal: o meio do caminho é a cor média da marca */
+  --color-st-meio-tx: #111111;
+  --color-st-avanco: #616161;
   --color-st-avanco-tx: #ffffff;
-  --color-st-pronto: #16130f;
-  --color-st-pronto-tx: #f3f0ea;
+  --color-st-pronto: #1c1c1c;
+  --color-st-pronto-tx: #f4f4f4;
   --color-st-alerta: #a03418;
   --color-st-alerta-tx: #ffffff;
+
+  /* Os tons 01 do manual, literais, para superfícies decorativas (faixa de
+     cartão): a versão texto (mais escura) mora em --color-azul/verde/argila.
+     Fora do @theme pelo mesmo motivo dos status: são montados em template
+     string e o Tailwind podaria. */
+  --color-ceu: #70849c;
+  --color-natureza: #637562;
+  --color-terra: #907d6d;
+
+  /* O funil comercial é uma rampa de Céu: do tom 03 no Lead ao tom de texto
+     na Negociação — quanto mais adiantado, mais fundo o azul. Ganho fecha em
+     tinta: deixou de ser céu, virou contrato. Ancorada nos tons literais do
+     manual (03 → 02 → 01) com degraus interpolados entre eles. */
+  --color-funil-lead: #dee6ec;
+  --color-funil-lead-tx: #46596f;
+  --color-funil-contato: #c9d5de;
+  --color-funil-contato-tx: #3d5063;
+  --color-funil-reuniao: #a7b5c4;
+  --color-funil-reuniao-tx: #26313d;
+  --color-funil-briefing: #8ea3b5;
+  --color-funil-briefing-tx: #1c242d;
+  --color-funil-proposta: #70849c;
+  --color-funil-proposta-tx: #12181f;
+  --color-funil-negociacao: #46596f;
+  --color-funil-negociacao-tx: #ffffff;
+  --color-funil-ganho: #1c1c1c;
+  --color-funil-ganho-tx: #f4f4f4;
 }
 
 :root[data-tema="escuro"] {
-  --color-st-nulo: #33383b;
-  --color-st-nulo-tx: #b6bbbd;
-  --color-st-inicio: #4a5155;
-  --color-st-inicio-tx: #e6e9ea;
-  --color-st-meio: #6f7876;
+  --color-st-nulo: #333333;
+  --color-st-nulo-tx: #b5b5b5;
+  --color-st-inicio: #4a4a4a;
+  --color-st-inicio-tx: #e2e2e2;
+  --color-st-meio: #757575;
   --color-st-meio-tx: #ffffff;
-  --color-st-avanco: #a9aaa2;
-  --color-st-avanco-tx: #14120f;
-  --color-st-pronto: #f0ece4;
-  --color-st-pronto-tx: #14120f;
+  --color-st-avanco: #a8a8a8;
+  --color-st-avanco-tx: #141414;
+  --color-st-pronto: #f4f4f4;
+  --color-st-pronto-tx: #141414;
   --color-st-alerta: #e2603c;
-  --color-st-alerta-tx: #16130f;
+  --color-st-alerta-tx: #1c1c1c;
+
+  /* No escuro as faixas sobem para os tons 02 do manual. */
+  --color-ceu: #a7b5c4;
+  --color-natureza: #afbcaf;
+  --color-terra: #c1b5a9;
+
+  /* A rampa do funil no escuro: do fundo Céu quase preto ao 02 claro,
+     fechando em MOD White — o negativo da rampa do claro. */
+  --color-funil-lead: #222a33;
+  --color-funil-lead-tx: #a7b5c4;
+  --color-funil-contato: #2b3641;
+  --color-funil-contato-tx: #b5c1cd;
+  --color-funil-reuniao: #3a4a5a;
+  --color-funil-reuniao-tx: #d3dde6;
+  --color-funil-briefing: #53687d;
+  --color-funil-briefing-tx: #f0f4f8;
+  --color-funil-proposta: #7e94aa;
+  --color-funil-proposta-tx: #131920;
+  --color-funil-negociacao: #a7b5c4;
+  --color-funil-negociacao-tx: #1a1f24;
+  --color-funil-ganho: #f4f4f4;
+  --color-funil-ganho-tx: #1c1c1c;
 }
 
 /* =====================================================================
    PRANCHA (padrão) — uma planta impressa é traço escuro sobre papel.
-   O papel vem do off-white das capas de destaque da MOD (#F2F2F2),
-   aquecido; a "tinta" é o preto de nanquim.
+   Os três neutros do manual entram literais: MOD White é o papel,
+   MOD Black é a tinta, MOD Grey é o traço forte. Neutro de verdade,
+   sem o creme aquecido de antes — a MOD é "calma, exclusiva, moderna",
+   e o chão dela é cinza, não bege.
    ===================================================================== */
 :root {
   color-scheme: light;
 
-  --t-rail: #e6e2da;
-  --t-viewport: #f3f0ea;
+  --t-rail: #e8e8e8;
+  --t-viewport: #f4f4f4; /* MOD White */
   --t-painel: #ffffff;
-  --t-painel-alto: #fbf9f5;
-  --t-traco: #d6d0c6;
-  --t-traco-forte: #a49c90;
+  --t-painel-alto: #fafafa;
+  --t-traco: #dedede;
+  --t-traco-forte: #989898; /* MOD Grey */
 
-  /* contraste sobre o papel: tinta 15.9:1, média 8.2:1, fraca 4.9:1 */
-  --t-tinta: #16130f;
-  --t-tinta-media: #524d46;
-  --t-tinta-fraca: #777066;
+  /* contraste sobre o papel: tinta 15.5:1, média 7.8:1, fraca 4.9:1 */
+  --t-tinta: #1c1c1c; /* MOD Black */
+  --t-tinta-media: #4c4c4c;
+  --t-tinta-fraca: #6b6b6b;
 
-  --t-argila: #7d5f4c;
-  --t-argila-fundo: #f0e7e0;
-  --t-verde: #3a5442;
-  --t-verde-fundo: #e3ebe4;
-  --t-azul: #3a5a70;
-  --t-azul-fundo: #e2ebf0;
+  /* acentos = tom 01 do manual descido até texto AA; fundo = tom 03 literal */
+  --t-argila: #6b5847; /* de MOD Terra 01 #907D6D */
+  --t-argila-fundo: #f3ede5; /* MOD Terra 03 */
+  --t-verde: #40503f; /* de MOD Natureza 01 #637562 */
+  --t-verde-fundo: #dce6dd; /* MOD Natureza 03 */
+  --t-azul: #46596f; /* de MOD Céu 01 #70849C */
+  --t-azul-fundo: #dee6ec; /* MOD Céu 03 */
   --t-ferrugem: #a03418;
   --t-ferrugem-fundo: #f7e2db;
 
-  --t-selo-feito: #16130f;
-  --t-selo-ativo: #9e7a5f;
-  --t-selo-vazio: #cbc4b8;
+  --t-selo-feito: #1c1c1c;
+  --t-selo-ativo: #907d6d; /* MOD Terra 01, traço não-textual */
+  --t-selo-vazio: #c9c9c9;
 
   --acento: var(--color-tinta);
   --acento-fundo: var(--color-painel);
@@ -128,33 +191,36 @@
 
 /* =====================================================================
    VIEWPORT — o CAD aberto, para trabalhar à noite ou em tela grande.
+   O negativo do manual: MOD Black vira o chão, MOD White vira a tinta,
+   MOD Grey vira a tinta fraca. Os acentos são os tons 02 literais —
+   é a página "CINZA EM FUNDO PRETO" do manual, funcionando.
    ===================================================================== */
 :root[data-tema="escuro"] {
   color-scheme: dark;
 
-  --t-rail: #0e1012;
-  --t-viewport: #1a1d1f;
-  --t-painel: #24282b;
-  --t-painel-alto: #2e3337;
-  --t-traco: #3a4044;
-  --t-traco-forte: #596166;
+  --t-rail: #121212;
+  --t-viewport: #1c1c1c; /* MOD Black */
+  --t-painel: #262626;
+  --t-painel-alto: #303030;
+  --t-traco: #3a3a3a;
+  --t-traco-forte: #5d5d5d;
 
-  --t-tinta: #f0ece4;
-  --t-tinta-media: #bcc0be;
-  --t-tinta-fraca: #8d9290;
+  --t-tinta: #f4f4f4; /* MOD White */
+  --t-tinta-media: #bdbdbd;
+  --t-tinta-fraca: #989898; /* MOD Grey */
 
-  --t-argila: #d9b79f;
-  --t-argila-fundo: #38291f;
-  --t-verde: #92bd9c;
-  --t-verde-fundo: #1f3325;
-  --t-azul: #93bcd6;
-  --t-azul-fundo: #1d2f3a;
+  --t-argila: #c1b5a9; /* MOD Terra 02 */
+  --t-argila-fundo: #2f2822;
+  --t-verde: #afbcaf; /* MOD Natureza 02 */
+  --t-verde-fundo: #232b24;
+  --t-azul: #a7b5c4; /* MOD Céu 02 */
+  --t-azul-fundo: #222a33;
   --t-ferrugem: #f07555;
   --t-ferrugem-fundo: #3d1d16;
 
-  --t-selo-feito: #f0ece4;
-  --t-selo-ativo: #d9b79f;
-  --t-selo-vazio: #4c5357;
+  --t-selo-feito: #f4f4f4;
+  --t-selo-ativo: #c1b5a9;
+  --t-selo-vazio: #4a4a4a;
 }
 
 [data-secao="comercial"] {
@@ -208,19 +274,20 @@ body {
   letter-spacing: -0.01em;
 }
 
-/* Título de página: o salto de escala é a personalidade. Jost 200 grande e
-   apertada contra o rótulo mono minúsculo. */
+/* Título de página: o salto de escala é a personalidade. Kiona grande e
+   tracejado, como os títulos do manual. */
 .titulo {
   font-family: var(--font-display);
-  font-weight: 200;
+  font-weight: 400;
   font-size: clamp(1.9rem, 3.4vw, 2.6rem);
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.04em;
   color: var(--color-tinta);
 }
 
-/* Bloco do número da folha: tinta cheia, número vazado. Mesma linguagem da
-   aba e do carimbo, e serve de âncora à esquerda da faixa. */
+/* Bloco do número da folha: cheio, número vazado. Veste a cor da família
+   da seção (Céu, Terra, Natureza — via --acento); no Hoje fica em tinta.
+   Mesma linguagem da aba e do carimbo, e âncora à esquerda da faixa. */
 .folha-num {
   display: flex;
   flex-direction: column;
@@ -229,7 +296,7 @@ body {
   align-self: stretch;
   min-width: 46px;
   padding: 4px 8px 5px;
-  background: var(--color-tinta);
+  background: var(--acento);
   border-radius: 2px;
   font-family: var(--font-mono);
   line-height: 1.1;
@@ -274,7 +341,7 @@ body {
   align-items: baseline;
   gap: 3px;
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.015em;
   line-height: 1;
@@ -566,6 +633,17 @@ select.campo {
   white-space: nowrap;
 }
 
+/* Quadrado de legenda na célula: a cor da família de onde o número vem,
+   como a legenda de layers de uma prancha. */
+.carimbo-cor {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 1px;
+  transform: translateY(0.5px);
+}
+
 .carimbo-val {
   font-family: var(--font-mono);
   font-size: 13px;
@@ -582,6 +660,13 @@ select.campo {
   font-weight: 300;
   font-size: 19px;
   letter-spacing: 0.02em;
+}
+
+/* `.carimbo-val` é CSS sem camada e ganharia da utility text-ferrugem, que
+   vive em @layer utilities. A célula furada precisa vencer esse cabo de
+   guerra: sem esta regra o alerta imprime em tinta comum. */
+.carimbo-val.text-ferrugem {
+  color: var(--color-ferrugem);
 }
 
 /* =====================================================================
@@ -728,6 +813,55 @@ select.campo {
   color: var(--color-tinta);
 }
 
+/* A folha fechada levanta um fio ao passar o ponteiro. */
+.aba:hover {
+  margin-top: 2px;
+}
+
+/* =====================================================================
+   Cada divisória fechada veste sua família do manual: casca no tom de
+   texto, miolo no tom 03, letra na família. É a fileira de cartões de cor
+   da página 31 servindo de navegação. Hoje fica neutra — é a capa.
+   ===================================================================== */
+.aba[data-secao="comercial"] {
+  background: var(--color-azul);
+}
+
+.aba[data-secao="comercial"] .aba-int {
+  background: var(--color-azul-fundo);
+}
+
+.aba[data-secao="comercial"] .aba-nome,
+.aba[data-secao="comercial"] .aba-num {
+  color: var(--color-azul);
+}
+
+.aba[data-secao="projetos"] {
+  background: var(--color-argila);
+}
+
+.aba[data-secao="projetos"] .aba-int {
+  background: var(--color-argila-fundo);
+}
+
+.aba[data-secao="projetos"] .aba-nome,
+.aba[data-secao="projetos"] .aba-num {
+  color: var(--color-argila);
+}
+
+.aba[data-secao="clientes"] {
+  background: var(--color-verde);
+}
+
+.aba[data-secao="clientes"] .aba-int {
+  background: var(--color-verde-fundo);
+}
+
+.aba[data-secao="clientes"] .aba-nome,
+.aba[data-secao="clientes"] .aba-num {
+  color: var(--color-verde);
+}
+
 /* A folha aberta sobe até encostar na prancha e vira o mesmo papel. */
 .aba[aria-current="page"] {
   margin-top: 0;
@@ -742,8 +876,9 @@ select.campo {
   font-weight: 500;
 }
 
+/* O número da folha aberta acende na cor da família da seção. */
 .aba[aria-current="page"] .aba-num {
-  color: var(--color-tinta-media);
+  color: var(--acento);
 }
 
 .aba:focus-visible {
@@ -876,6 +1011,13 @@ select.chip {
     opacity: 1;
     transform: none;
   }
+}
+
+/* Os anéis do manual surgem como o selo: crescendo do centro, uma vez só.
+   A classe fica no svg, nunca no wrapper posicionado — transform de animação
+   não pode brigar com o translate de posicionamento. */
+.aneis-surgir {
+  animation: selo-anel 1200ms cubic-bezier(0.22, 1, 0.36, 1) 250ms both;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -224,7 +224,7 @@ function Tarefas({
                   onMudou();
                 })
               }
-              className="h-3.5 w-3.5 shrink-0 accent-[#C9A48C]"
+              className="h-3.5 w-3.5 shrink-0 accent-argila"
             />
             <span
               className={`flex-1 text-[13px] ${

@@ -16,6 +16,10 @@ export type Celula = {
   destaque?: boolean;
   /** hachura de corte: o prazo estourou */
   furado?: boolean;
+  /** quadrado de legenda: a família do manual de onde o número vem
+      ("ceu" | "terra" | "natureza"). Usar onde as células misturam
+      folhas diferentes, como no Hoje. */
+  cor?: string;
 };
 
 export function Carimbo({
@@ -49,7 +53,16 @@ export function Carimbo({
           className={`carimbo-cel ${c.furado ? "hachura" : ""}`}
           style={c.span && c.span > 1 ? { gridColumn: `span ${c.span}` } : undefined}
         >
-          <p className="carimbo-rot">{c.rotulo}</p>
+          <p className="carimbo-rot">
+            {c.cor ? (
+              <span
+                className="carimbo-cor"
+                style={{ background: `var(--color-${c.cor})` }}
+                aria-hidden
+              />
+            ) : null}
+            {c.rotulo}
+          </p>
           <p
             className={`carimbo-val ${c.destaque ? "carimbo-val-largo" : ""} ${
               c.furado ? "text-ferrugem" : ""

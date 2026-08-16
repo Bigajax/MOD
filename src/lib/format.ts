@@ -80,7 +80,7 @@ export function prazoRelativo(iso: string | null | undefined) {
   if (dias === -1) return "venceu ontem";
   if (dias === 0) return "vence hoje";
   if (dias === 1) return "vence amanhã";
-  return `em ${dias} dias`;
+  return `vence em ${dias} dias`;
 }
 
 export const ROTULO_ETAPA: Record<string, string> = {

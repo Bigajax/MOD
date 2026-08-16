@@ -1,28 +1,25 @@
 import type { Metadata } from "next";
-import { Jost, Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
+import { Questrial, Poppins } from "next/font/google";
 import { scriptTema } from "@/components/troca-tema";
 import "./globals.css";
 
-/* Jost é revival de Futura — é a geometria do próprio logo da MOD. */
-const jost = Jost({
-  variable: "--fonte-jost",
+/* As fontes do manual — Kiona e Champagne & Limousines — não existem no
+   Google Fonts. Estes são os pares livres mais próximos:
+
+   Questrial faz o papel do Kiona: caixa-alta geométrica de traço fino,
+   a cara dos títulos e rótulos do manual. */
+const kiona = Questrial({
+  variable: "--fonte-titulo",
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500"],
+  weight: "400",
 });
 
-/* Space Grotesk carrega desenho: terminais cortados, g de um andar, largura
-   levemente condensada. Registro de estúdio técnico, não de admin genérico. */
-const grotesk = Space_Grotesk({
-  variable: "--fonte-grotesk",
+/* Poppins faz o papel do Champagne & Limousines nos textos corridos:
+   mesma geometria redonda, com os pesos que o C&L tem (regular e bold). */
+const champagne = Poppins({
+  variable: "--fonte-texto",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-/* Mono só onde é dado medido: valor, prazo, contagem, código. */
-const plexMono = IBM_Plex_Mono({
-  variable: "--fonte-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -38,9 +35,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: scriptTema }} />
       </head>
-      <body
-        className={`${jost.variable} ${grotesk.variable} ${plexMono.variable}`}
-      >
+      <body className={`${kiona.variable} ${champagne.variable}`}>
         {children}
       </body>
     </html>

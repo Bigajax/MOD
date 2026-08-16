@@ -37,6 +37,7 @@ export function AbasFolha() {
             key={folha.href}
             href={folha.href}
             aria-current={sel ? "page" : undefined}
+            data-secao={folha.secao}
             className="aba"
           >
             <span className="aba-int">

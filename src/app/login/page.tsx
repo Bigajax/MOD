@@ -1,12 +1,22 @@
 import { FormularioLogin } from "./formulario-login";
 import { configOk } from "@/lib/supabase/config";
 import { MargemFolha } from "@/components/carimbo";
+import { AneisMod } from "@/components/aneis-mod";
 
 const ESCADA = ["MOD", "MODO", "MODELO", "MODERNO", "MODIFICA"];
 
 export default function LoginPage() {
   return (
-    <main className="fixed inset-[13px] flex flex-col border border-tinta bg-painel">
+    <main className="fixed inset-[13px] flex flex-col overflow-hidden border border-tinta bg-painel">
+      {/* A textura oficial da capa: anéis em tinta sobre o papel, meia fora
+          da folha, como nos backgrounds do manual. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[-13%] top-1/2 w-[min(58vw,660px)] -translate-y-1/2 text-tinta opacity-[0.09]"
+      >
+        <AneisMod className="aneis-surgir h-auto w-full" />
+      </div>
+
       {/* Timbre da folha, igual ao do sistema por dentro. */}
       <div className="border-b border-traco px-6 pt-4 sm:px-9">
         <div className="flex items-baseline justify-between gap-4">

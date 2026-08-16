@@ -23,35 +23,35 @@ export function Bloco({
   contagem,
   nota,
   vazio,
-  tom = "nulo",
+  cor = "tinta",
   children,
 }: {
   titulo: string;
   contagem: number;
   nota?: React.ReactNode;
   vazio: string;
-  /** cor da faixa do grupo */
-  tom?: Tom;
+  /** cor de marca do grupo: "azul" (Céu), "argila" (Terra), "verde" (Natureza) */
+  cor?: string;
   children: React.ReactNode;
 }) {
   return (
     <section className="mt-12 first:mt-10">
-      <div className="flex items-center justify-between gap-4 border-b border-tinta-fraca pb-2">
-        <div className="flex items-center gap-3">
-          <span className="barra-grupo" style={chip(tom)} aria-hidden />
-          <h2 className="font-display text-[22px] font-light uppercase leading-none tracking-[0.14em] text-tinta">
-            {titulo}
-          </h2>
-        </div>
+      <div className="flex items-baseline justify-between gap-4 border-b border-traco pb-2">
+        {/* O título é o rótulo dos cartões de cor do manual: caixa-alta
+            espaçada, na própria cor da família. */}
+        <h2
+          className="font-display text-[19px] uppercase leading-none tracking-[0.2em]"
+          style={{ color: `var(--color-${cor})` }}
+        >
+          {titulo}
+        </h2>
         <span className="flex items-center gap-3">
           {nota ? (
             <span className="chip" style={chip("alerta")}>
               {nota}
             </span>
           ) : null}
-          <span className="dado text-[15px] font-medium text-tinta-media">
-            {String(contagem).padStart(2, "0")}
-          </span>
+          <span className="dado text-[15px] text-tinta-fraca">{contagem}</span>
         </span>
       </div>
       {contagem === 0 ? (
