@@ -180,7 +180,7 @@ export function gerarVariante(
 
   // a casa precisa de fundo para empilhar ~metade dos cômodos íntimos em
   // células que acomodem o mobiliário (>= 2,4 m) atrás da zona social
-  const hBnecessario = Math.ceil(fundos.length / 2) * 2.6;
+  const hBnecessario = Math.ceil(fundos.length / 2) * 2.9;
   const dPisoPrograma = fundos.length > 0 ? 2.8 + hBnecessario : 5;
 
   // ---- implantação discreta (Art. 13 §1º): recuo nulo ou 1,50 m -------
@@ -337,17 +337,24 @@ export function gerarVariante(
       { pedidos: [...grupoM], alvo: grupoM.reduce((s, p) => s + p.alvo, 0) },
       { pedidos: [], alvo: 0 },
     ];
+    // Faixa cega (colada na divisa): só a última célula, no fundo, tem
+    // luz (Art. 88 §1º) — cabe no máximo UM cômodo de permanência nela,
+    // sempre no fim da pilha. Vale para os dois lados.
+    const cegoLado = [
+      molhadoCego,
+      ladoMolhado === "esquerda" ? cegoDir : cegoEsq,
+    ];
     for (const p of grupoS) {
-      let alvoDest = lados[0].alvo <= lados[1].alvo ? lados[0] : lados[1];
-      // faixa cega: só a última célula (fundos) tem luz — no máximo UM
-      // cômodo de permanência entra nela, e vai para o fim da pilha
-      if (
-        molhadoCego &&
-        alvoDest === lados[0] &&
-        lados[0].pedidos.some((x) => !MOLHADO.includes(x.tipo))
-      ) {
-        alvoDest = lados[1];
-      }
+      const nSecos = (lado: { pedidos: Pedido[] }) =>
+        lado.pedidos.filter((x) => !MOLHADO.includes(x.tipo)).length;
+      const cabe0 = !cegoLado[0] || nSecos(lados[0]) < 1;
+      const cabe1 = !cegoLado[1] || nSecos(lados[1]) < 1;
+      let alvoDest: (typeof lados)[number];
+      if (cabe0 && cabe1)
+        alvoDest = lados[0].alvo <= lados[1].alvo ? lados[0] : lados[1];
+      else if (cabe0) alvoDest = lados[0];
+      else if (cabe1) alvoDest = lados[1];
+      else return null; // duas divisas e permanências demais: partido inviável
       alvoDest.pedidos.push(p);
       alvoDest.alvo += p.alvo;
     }

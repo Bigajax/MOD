@@ -19,7 +19,7 @@ import { validar } from "./validador.ts";
 import { PESOS_BASE, pontuar, type Pesos } from "./score.ts";
 
 const MAX_TENTATIVAS = 200;
-const MAX_VALIDAS = 10;
+const MAX_VALIDAS = 24;
 
 /* Fator de circulação + folga de compatibilização sobre a soma dos mínimos:
    abaixo disso nem o programa mínimo fecha e a resposta certa é o erro
@@ -142,6 +142,25 @@ export function gerarEstudo(
 
   if (validas.length === 0) return { erro: "SEM_VARIANTE_VALIDA" };
 
+  // Seleção com diversidade de implantação (spec 2C: distribuir entre as
+  // combinações do Art. 13 §1º): melhor nota primeiro, mas nenhuma
+  // implantação leva mais da metade das vagas enquanto houver alternativa.
   validas.sort((a, b) => b.score - a.score || a.seed - b.seed);
-  return { variantes: validas.slice(0, Math.max(1, quantidadeVariantes)) };
+  const alvo = Math.max(1, quantidadeVariantes);
+  const capPorCombo = Math.max(1, Math.ceil(alvo / 2));
+  const porCombo = new Map<string, number>();
+  const escolhidas: Variante[] = [];
+  for (const v of validas) {
+    if (escolhidas.length >= alvo) break;
+    const k = `${v.implantacao.recuoEsquerda}/${v.implantacao.recuoDireita}`;
+    const n = porCombo.get(k) ?? 0;
+    if (n >= capPorCombo) continue;
+    escolhidas.push(v);
+    porCombo.set(k, n + 1);
+  }
+  for (const v of validas) {
+    if (escolhidas.length >= alvo) break;
+    if (!escolhidas.includes(v)) escolhidas.push(v);
+  }
+  return { variantes: escolhidas };
 }

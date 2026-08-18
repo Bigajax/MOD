@@ -91,6 +91,10 @@ function numero(v: string): number {
   return Number(v.replace(",", "."));
 }
 
+/* Congelado no carregamento da página: basta para conferir os 90 dias
+   da Ficha (Art. 110) sem função impura no render. */
+const AGORA = Date.now();
+
 /* O pedido é preenchido como um carimbo de prancha: células densas com
    rótulo miúdo e valor, sem moldura própria por campo — o foco acende a
    célula inteira (CSS .carimbo-cel:focus-within). */
@@ -189,7 +193,7 @@ export function Gerador({
   const fichaVencida = (() => {
     if (!fichaData) return false;
     const emissao = new Date(`${fichaData}T00:00:00`);
-    return Date.now() - emissao.getTime() > 90 * 86_400_000;
+    return AGORA - emissao.getTime() > 90 * 86_400_000;
   })();
 
   // soma viva do programa contra o teto do terreno — avisa antes do clique
