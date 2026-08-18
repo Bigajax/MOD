@@ -678,7 +678,7 @@ select.campo {
 
 :root {
   --folha-borda: 13px;
-  --folha-abas: 47px;
+  --folha-abas: 31px;
   --folha-margem: 22px;
 }
 
@@ -760,49 +760,40 @@ select.campo {
 
 /* =====================================================================
    ABAS = separadores de um conjunto de pranchas.
-   Aresta cortada em diagonal como divisória de pasta, número da folha em
-   cima do nome, e a ativa emerge do maço enquanto as outras ficam recuadas.
+   Trapézio chanfrado dos dois lados, como a orelha de uma divisória de
+   pasta: uma linha só, e a ativa emerge do maço enquanto as outras ficam
+   recuadas.
 
    A borda é feita com a casca pintada na cor do traço e o miolo 1px menor:
    clip-path corta borda de verdade, então a borda vira fundo.
    ===================================================================== */
 .aba {
   display: block;
-  min-width: 116px;
-  margin-top: 5px;
-  padding: 1px 0 0 1px;
+  margin-top: 4px;
+  padding: 1px 1px 0;
   background: var(--color-traco-forte);
-  clip-path: polygon(11px 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(9px 0, calc(100% - 9px) 0, 100% 100%, 0 100%);
   transition: margin-top 140ms ease;
 }
 
 .aba-int {
   display: flex;
-  flex-direction: column;
-  gap: 1px;
+  align-items: center;
   height: 100%;
-  padding: 5px 16px 8px 20px;
+  padding: 0 22px;
   background: var(--color-rail);
-  clip-path: polygon(11px 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(9px 0, calc(100% - 9px) 0, 100% 100%, 0 100%);
   transition:
     background-color 140ms ease,
     color 140ms ease;
 }
 
-.aba-num {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  color: var(--color-tinta-fraca);
-}
-
 .aba-nome {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 13px;
-  line-height: 1.1;
-  letter-spacing: 0.17em;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-tinta-fraca);
   white-space: nowrap;
@@ -831,8 +822,7 @@ select.campo {
   background: var(--color-azul-fundo);
 }
 
-.aba[data-secao="comercial"] .aba-nome,
-.aba[data-secao="comercial"] .aba-num {
+.aba[data-secao="comercial"] .aba-nome {
   color: var(--color-azul);
 }
 
@@ -844,8 +834,7 @@ select.campo {
   background: var(--color-argila-fundo);
 }
 
-.aba[data-secao="projetos"] .aba-nome,
-.aba[data-secao="projetos"] .aba-num {
+.aba[data-secao="projetos"] .aba-nome {
   color: var(--color-argila);
 }
 
@@ -857,9 +846,23 @@ select.campo {
   background: var(--color-verde-fundo);
 }
 
-.aba[data-secao="clientes"] .aba-nome,
-.aba[data-secao="clientes"] .aba-num {
+.aba[data-secao="clientes"] .aba-nome {
   color: var(--color-verde);
+}
+
+/* A folha do Estudo é a única onde o sistema desenha de verdade — então a
+   divisória dela não veste família de cor: veste nanquim. Casca em tinta
+   cheia, miolo no papel do chão, letra em tinta. */
+.aba[data-secao="estudo"] {
+  background: var(--color-tinta);
+}
+
+.aba[data-secao="estudo"] .aba-int {
+  background: var(--color-viewport);
+}
+
+.aba[data-secao="estudo"] .aba-nome {
+  color: var(--color-tinta);
 }
 
 /* A folha aberta sobe até encostar na prancha e vira o mesmo papel. */
@@ -874,11 +877,6 @@ select.campo {
 .aba[aria-current="page"] .aba-nome {
   color: var(--color-tinta);
   font-weight: 500;
-}
-
-/* O número da folha aberta acende na cor da família da seção. */
-.aba[aria-current="page"] .aba-num {
-  color: var(--acento);
 }
 
 .aba:focus-visible {

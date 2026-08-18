@@ -1,0 +1,209 @@
+{
+  "$comentario": "KISS v3 Fase 1B — retângulo de mobiliário por cômodo. Fontes primárias lidas em 2026-08-18: (1) NBR 15575-1, Anexo G (informativo), 'Dimensões mínimas e organização funcional dos espaços' — PDF em autogestao.unmp.org.br/wp-content/uploads/2014/09/Anexo-G_NBR-15575_1_Requisitos-Gerais.pdf; (2) Ernst Neufert, 'Arte de Projetar em Arquitetura', 5ª ed. brasileira (Gustavo Gili, 1976, trad. 21ª ed. alemã) — scan em fenix.tecnico.ulisboa.pt/downloadFile/282093452092530/Neufert-a-arte-de-projetar-em-arquitetura.pdf. REGRA: confianca 'alta' = valor literal lido na fonte; 'media' = fonte secundária nomeando a primária; 'baixa' = DERIVAÇÃO PRÓPRIA (soma de parcelas sourceadas) — não entra no validador sem aprovação de arquiteto. A NBR declara na NOTA 1 do Anexo G que NÃO fixa dimensões de cômodos — toda largura 'derivada' é conta nossa sobre parcelas dela.",
+
+  "quarto": {
+    "mobiliarioEssencial": [
+      { "item": "cama casal", "dim": [1.4, 1.9], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" },
+      { "item": "criado-mudo (2, admite-se 1)", "dim": [0.5, 0.5], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" },
+      { "item": "guarda-roupa casal", "dim": [1.6, 0.5], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" }
+    ],
+    "folgaCirculacao": {
+      "valor": 0.5,
+      "detalhe": "'Circulação mínima entre o mobiliário e/ou paredes de 0,50 m' (NBR); Neufert p.179 cota >=0,55 e >=0,65 nas laterais da cama de casal",
+      "confianca": "alta"
+    },
+    "larguraMinima": {
+      "valor": 2.9,
+      "derivacao": "guarda-roupa 0,50 (prof.) + circulação 0,50 + cama 1,40 + passagem 0,50 = 2,90. Referência literal: plantas do Neufert p.179 com quartos de casal de 2,50 m (cama transversal) e 3,00 m de largura.",
+      "confianca": "baixa"
+    },
+    "retanguloMinimo": {
+      "orientacaoA": [2.9, 2.4],
+      "orientacaoB": [2.9, 2.9],
+      "derivacao": "A: guarda-roupa na parede lateral — largura 2,90 × (cama 1,90 + folga de pé 0,50) = 2,40. B: guarda-roupa na parede do pé da cama — 2,90 × (1,90 + 0,50 + 0,50) = 2,90. Somas próprias sobre parcelas NBR.",
+      "confianca": "baixa"
+    },
+    "fonte": "NBR 15575-1 Anexo G (parcelas, alta) + Neufert 5ª ed. p.177-179 (plantas, alta); retângulos derivados (baixa)"
+  },
+
+  "suite": {
+    "mobiliarioEssencial": "= quarto casal + banho privativo (nenhuma fonte define 'suíte' como categoria própria)",
+    "folgaCirculacao": { "valor": 0.5, "fonte": "= quarto (NBR)", "confianca": "alta" },
+    "larguraMinima": {
+      "valor": 2.9,
+      "derivacao": "governada pelo quarto; banho privativo contíguo precisa de faixa própria >= 1,10 m (NBR banheiro)",
+      "confianca": "baixa"
+    },
+    "retanguloMinimo": {
+      "composicao": "quarto [2,90 × 2,40] + banho [1,10 × 2,40] contíguo",
+      "referenciaLiteral": "Neufert p.183 fig. 25: banheiro completo conjugado ao quarto com 1,31 × >=2,42 m",
+      "confianca": "baixa"
+    },
+    "fonte": "composição própria sobre quarto + banho"
+  },
+
+  "sala": {
+    "mobiliarioEssencial": [
+      { "item": "sofá 3 lugares com braço", "dim": [1.7, 0.7], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" },
+      { "item": "estante/armário TV", "dim": [0.8, 0.5], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" },
+      { "item": "mesa 4 lugares", "dim": [1.2, 0.8], "fonte": "NBR 15575-1 Anexo G ('redonda D=0,95' como alternativa)", "confianca": "alta" }
+    ],
+    "folgaCirculacao": {
+      "frenteDoAssento": { "valor": 0.5, "trecho": "'Prever espaço de 0,50 m na frente do assento'", "confianca": "alta" },
+      "bordaDaMesa": { "valor": 0.75, "trecho": "'Circulação mínima de 0,75 m a partir da borda da mesa'", "confianca": "alta" }
+    },
+    "larguraMinima": {
+      "valor": 2.4,
+      "trecho": "'Largura mínima da sala de estar deve ser 2,40 m' — VALOR LITERAL da NBR, não derivado",
+      "confianca": "alta"
+    },
+    "retanguloMinimo": {
+      "soEstar": [2.4, 2.4],
+      "estarComJantar4p": [2.4, 4.7],
+      "derivacao": "estar: largura literal 2,40 × (sofá 0,70 + frente 0,50 + TV 0,50 + circulação 0,50 ≈ 2,20, arredondado a 2,40). estar+jantar: 2,40 + (mesa 0,80 + 2 × 0,75) = 4,70 no eixo longo. Somas próprias. Referência literal Neufert p.169 fig.8: sala de jantar 6p = 3,20 × 3,70 m.",
+      "confianca": "baixa"
+    },
+    "fonte": "NBR 15575-1 Anexo G (largura literal, alta) + Neufert p.168-171; retângulos derivados (baixa)"
+  },
+
+  "cozinha": {
+    "mobiliarioEssencial": [
+      { "item": "pia", "dim": [1.2, 0.5], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" },
+      { "item": "fogão", "dim": [0.55, 0.6], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" },
+      { "item": "geladeira", "dim": [0.7, 0.7], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" }
+    ],
+    "folgaCirculacao": {
+      "valor": 0.85,
+      "trecho": "'Circulação mínima 0,85 m frontal à pia, fogão e geladeira' (NBR). Neufert p.163: bancadas opostas p/ 2 pessoas = 2,50 m total; forno extraível pede >=1,00 m à frente.",
+      "confianca": "alta"
+    },
+    "larguraMinima": {
+      "valor": 1.5,
+      "trecho": "'Largura mínima da cozinha: 1,50 m' — literal NBR. Neufert p.162, literal: 'Considera-se 1,875 m como largura mínima do espaço destinado à cozinha' (cozinha de Frankfurt).",
+      "confianca": "alta",
+      "conflito": true,
+      "notaConflito": "NBR 1,50 × Neufert 1,875 — fontes divergem; decisão de arquiteto qual adotar como piso"
+    },
+    "retanguloMinimo": {
+      "linearParedeUnica": [2.5, 1.5],
+      "derivacao": "comprimento = pia 1,20 + fogão 0,55 + geladeira 0,70 = 2,45 → 2,50 na malha; largura literal 1,50 (bancada 0,50 + frente 0,85, arred. pela NBR). Soma própria.",
+      "confianca": "baixa"
+    },
+    "fonte": "NBR 15575-1 Anexo G (alta) + Neufert p.162-166 (alta); retângulo derivado (baixa)"
+  },
+
+  "banho": {
+    "mobiliarioEssencial": [
+      { "item": "lavatório", "dim": [0.39, 0.29], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" },
+      { "item": "vaso sanitário caixa acoplada", "dim": [0.6, 0.7], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" },
+      { "item": "box quadrado", "dim": [0.8, 0.8], "fonte": "NBR 15575-1 Anexo G ('retangular 0,70 × 0,90' como alternativa)", "confianca": "alta" }
+    ],
+    "folgaCirculacao": {
+      "valor": 0.4,
+      "trecho": "'Circulação mínima de 0,4 m frontal ao lavatório, vaso e bidê' (NBR)",
+      "confianca": "alta"
+    },
+    "larguraMinima": {
+      "valor": 1.1,
+      "trecho": "'Largura mínima do banheiro: 1,10 m, exceto no box' — literal NBR",
+      "confianca": "alta"
+    },
+    "retanguloMinimo": {
+      "orientacaoA": [1.1, 2.4],
+      "derivacao": "faixa de 1,10 de largura × (box 0,80 + vaso 0,70 + lavatório 0,29 + folgas ≈ 2,30-2,40). Referência literal Neufert p.183 fig.25: banheiro completo 1,31 × >=2,42 m.",
+      "confianca": "baixa"
+    },
+    "fonte": "NBR 15575-1 Anexo G (alta) + Neufert p.180-183 (alta); retângulo derivado (baixa)"
+  },
+
+  "lavabo": {
+    "mobiliarioEssencial": [
+      { "item": "vaso sanitário", "dim": [0.6, 0.7], "fonte": "NBR 15575-1 Anexo G ('No caso de lavabos, não é necessário o chuveiro')", "confianca": "alta" },
+      { "item": "lavatório", "dim": [0.39, 0.29], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" }
+    ],
+    "folgaCirculacao": { "valor": 0.4, "fonte": "mesma regra do banheiro (NBR)", "confianca": "alta" },
+    "larguraMinima": {
+      "valor": 0.8,
+      "trecho": "plantas literais do Neufert p.183: retrete 1,20 × 0,80; retrete com lavatório 1,75 × 0,80",
+      "confianca": "alta",
+      "conflito": true,
+      "notaConflito": "Se a regra de 'banheiro' da NBR (1,10 m) for aplicada a lavabo, o piso sobe para 1,10. As fontes não dizem qual vale para lavabo — decisão de arquiteto."
+    },
+    "retanguloMinimo": {
+      "orientacaoA": [0.8, 1.75],
+      "derivacao": "planta literal do Neufert p.183 (retrete com lavatório)",
+      "confianca": "alta"
+    },
+    "fonte": "Neufert p.183 (alta) + NBR Anexo G (alta)"
+  },
+
+  "servico": {
+    "mobiliarioEssencial": [
+      { "item": "tanque (mín. 20 L)", "dim": [0.52, 0.53], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" },
+      { "item": "máquina de lavar", "dim": [0.6, 0.65], "fonte": "NBR 15575-1 Anexo G", "confianca": "alta" }
+    ],
+    "folgaCirculacao": {
+      "valor": 0.5,
+      "trecho": "'Circulação mínima de 0,50 m frontal ao tanque e máquina de lavar' (NBR)",
+      "confianca": "alta"
+    },
+    "larguraMinima": {
+      "valor": 1.15,
+      "derivacao": "máquina 0,65 (prof.) + circulação frontal 0,50 = 1,15. Soma própria — a NBR não fixa largura do cômodo.",
+      "confianca": "baixa"
+    },
+    "retanguloMinimo": {
+      "orientacaoA": [1.2, 1.15],
+      "derivacao": "tanque 0,52 + máquina 0,60 lado a lado = 1,12 → 1,20 na malha × 1,15. Soma própria.",
+      "confianca": "baixa"
+    },
+    "fonte": "NBR 15575-1 Anexo G (parcelas, alta); derivações (baixa)"
+  },
+
+  "portas": {
+    "folhaPorComodo": {
+      "valor": { "banheiroLavabo": 0.6, "dormitorio": 0.8, "entradaCorredor": 0.9 },
+      "fonte": "clickhabitacao.com.br citando Decreto SP 12.342/1978 — fonte secundária; NÃO é lei de Maringá",
+      "url": "https://www.clickhabitacao.com.br/meu-imovel/projeto-de-residencia-um-guia-com-medidas-e-areas-minimas/",
+      "confianca": "media"
+    },
+    "vaosNormalizados": {
+      "valor": [0.625, 0.75, 0.875, 1.0],
+      "fonte": "Neufert 5ª ed. p.117, DIN 18100 (medidas de obra em tosco, 1 batente)",
+      "confianca": "alta"
+    },
+    "distanciaMinimaPortaParede": {
+      "valor": 0.08,
+      "fonte": "Neufert p.116 figs. 5-6 ('Distância mínima das portas à parede', cota 8 cm)",
+      "confianca": "alta"
+    },
+    "raioGiro": {
+      "valor": "igual à largura da folha (quadrante)",
+      "fonte": "derivação geométrica; plantas do Neufert p.116 mostram o arco igual à folha — nenhuma fonte dá o número pronto",
+      "confianca": "baixa"
+    }
+  },
+
+  "circulacao": {
+    "passagem1Pessoa": {
+      "valor": 0.875,
+      "trecho": "Neufert p.21, 'Espaços necessários entre paredes': 1 pessoa 875 mm; 'Para pessoas em movimento aumentar a largura dum valor >= 10%' → ~0,96 m",
+      "confianca": "alta"
+    },
+    "corredorResidencialBrasil": {
+      "valor": { "usoRestrito": 0.9, "usoComum": 1.2 },
+      "fonte": "clickhabitacao.com.br citando Decreto SP 12.342/78 — secundária, não é Maringá",
+      "confianca": "media"
+    },
+    "notaSolver": "O corredor atual do solver (1,10 m) fica entre o mínimo restrito (0,90) e o comum (1,20) — acima do Neufert 1 pessoa em movimento (0,96). Nenhuma mudança exigida pelas fontes."
+  },
+
+  "pendencias": [
+    "Todos os retângulos mínimos marcados 'baixa' são somas próprias sobre parcelas sourceadas — validar com arquiteto antes de virarem hard constraint (2A).",
+    "Conflito cozinha: largura mínima 1,50 (NBR) × 1,875 (Neufert literal). Escolher o piso.",
+    "Conflito lavabo: 0,80 (plantas Neufert) × 1,10 (se regra de banheiro NBR se aplicar). Escolher.",
+    "Largura de folha de porta por cômodo veio de fonte secundária citando decreto de SÃO PAULO — conferir se o código de Maringá fixa larguras próprias (1A).",
+    "Panero & Zelnik inacessível nesta sessão — nada dele foi usado.",
+    "Neufert consultado é a edição de 1976: dimensões de eletrodomésticos historicamente datadas; para equipamento atual valem as da NBR."
+  ]
+}

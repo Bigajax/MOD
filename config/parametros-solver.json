@@ -1,0 +1,110 @@
+{
+  "$comentario": "KISS v3 Fase 2 — config MÁQUINA destilada dos artefatos aprovados da Fase 1 (mobiliario.json, codigo-obras-maringa.json, score.json). Editar um valor aqui muda o resultado do gerador sem tocar em código (critério de aceite 6). Cada bloco cita a origem; o que é POLÍTICA DO ESCRITÓRIO está marcado — Maringá não fixa esses números (código performativo, ver PESQUISA.md).",
+
+  "mobiliario": {
+    "$origem": "config/mobiliario.json (NBR 15575-1 Anexo G + Neufert 5ª ed.); retângulos são as derivações aprovadas com ressalva (confiança baixa na Fase 1)",
+    "porTipo": {
+      "quarto": {
+        "larguraMinima": 2.4,
+        "retangulos": [[2.9, 2.4]],
+        "nota": "guarda-roupa 0,50 + circ. 0,50 + cama 1,40 + passagem 0,50 = 2,90 no eixo maior; 2,40 no menor (cama 1,90 + pé 0,50)"
+      },
+      "suite": {
+        "larguraMinima": 2.4,
+        "retangulos": [[3.5, 2.9], [4.0, 2.4]],
+        "nota": "quarto casal + faixa de banho privativo (>= 1,10) embutida; composição própria (baixa)"
+      },
+      "sala": {
+        "larguraMinima": 2.4,
+        "retangulos": [[4.7, 2.4], [4.2, 2.4]],
+        "nota": "largura 2,40 LITERAL da NBR; arranjo linear estar+jantar 4,70 ou lado a lado 4,20 (derivações)"
+      },
+      "cozinha": {
+        "larguraMinima": 1.5,
+        "retangulos": [[2.5, 1.5]],
+        "nota": "ESCOLHA: piso NBR 1,50 (alternativa Neufert 1,875 — trocar aqui se o escritório preferir); linear pia+fogão+geladeira 2,45"
+      },
+      "banho": {
+        "larguraMinima": 1.1,
+        "retangulos": [[2.4, 1.1]],
+        "nota": "largura 1,10 LITERAL da NBR ('exceto no box'); box 0,80 + vaso 0,70 + lavatório + folgas ≈ 2,40 (ref. Neufert 1,31 × 2,42)"
+      },
+      "lavabo": {
+        "larguraMinima": 0.8,
+        "retangulos": [[1.75, 0.8]],
+        "nota": "ESCOLHA: plantas literais do Neufert p.183 (retrete c/ lavatório 1,75 × 0,80); alternativa: aplicar 1,10 da NBR — trocar aqui"
+      },
+      "servico": {
+        "larguraMinima": 1.15,
+        "retangulos": [[1.2, 1.15]],
+        "nota": "máquina 0,65 + frente 0,50 = 1,15; tanque 0,52 + máquina 0,60 = 1,12 → 1,20 (derivação)"
+      },
+      "varanda": { "larguraMinima": 0.9, "retangulos": null, "nota": "sem exigência de mobiliário" },
+      "circulacao": { "larguraMinima": 1.1, "retangulos": null, "nota": "largura própria do corredor (spec v1); acima do Neufert 1 pessoa em movimento (0,96) e do uso restrito 0,90" }
+    }
+  },
+
+  "portas": {
+    "$origem": "config/mobiliario.json seção portas — larguras por cômodo vêm de fonte MÉDIA (Decreto SP via clickhabitacao); adotadas como política do escritório",
+    "politicaEscritorio": true,
+    "folhaPorTipo": { "banho": 0.6, "lavabo": 0.6, "padrao": 0.8, "entrada": 0.9 },
+    "raioGiroIgualFolha": true
+  },
+
+  "iluminacao": {
+    "$origem": "Maringá NÃO fixa (LC 1.045/2016 Arts. 85-86 remetem às NBR — ver codigo-obras-maringa.json). Estes números são POLÍTICA DO ESCRITÓRIO, declarada como tal, ajustável aqui.",
+    "politicaEscritorio": true,
+    "fracaoPisoIluminacao": 0.1667,
+    "fracaoVentilacaoDaIluminacao": 0.5,
+    "alturaUtilJanela": 1.2,
+    "profundidadeMaxIluminavel": 7.0,
+    "nota": "fração 1/6 do piso é prática histórica de códigos brasileiros (não é lei de Maringá); ventilação = 1/2 do vão de iluminação satisfeita pela mesma janela (abre); profundidade 7,0 m ≈ 2,6 × pé-direito 2,70 de referência"
+  },
+
+  "divisa": {
+    "$origem": "LC 1.045/2016 Art. 88 §1º (alta): abertura em parede contígua à divisa é PROIBIDA em qualquer nível",
+    "faceNaDivisaContaParaIluminacao": false,
+    "ladosQueSaoDivisa": ["esquerda", "direita", "fundos"],
+    "nota": "a frente é alinhamento predial (rua), não divisa — janela para a rua vale"
+  },
+
+  "padroes": {
+    "$origem": "config/score.json (faixas propostas, aprovadas com ressalva). Pesos ficam em score.json.",
+    "passagens": { "comprimentoBom": 4.5, "comprimentoRuim": 8.0, "esbeltezBoa": 5.0, "esbeltezRuim": 8.0 },
+    "luzDoisLados": { "patioConta": true, "varandaConta": false },
+    "salaCoracao": { "grauBom": 3 }
+  },
+
+  "implantacao": {
+    "$origem": "Art. 13 §1º (recuos discretos, alta); proporção e quintal são diretriz de implantação do spec v3/escritório",
+    "recuosLateraisPermitidos": [0, 1.5],
+    "distanciaMinimaAberturaDivisa": 1.5,
+    "quintalMinimo": 3.0,
+    "quintalFonte": "padrão do escritório (spec 2C) — sem artigo localizado",
+    "proporcaoProfundidadeMin": 1.0,
+    "proporcaoProfundidadeMax": 1.8
+  },
+
+  "vaga": {
+    "$origem": "Art. 23 (obrigatória); dimensão = prevalência do mais restritivo (Art. 1º §1º) entre NRM E-10003 (2,60 × 4,50 p/ vaga única) e padrão do escritório (2,50 × 5,00) → 2,60 × 5,00. Art. 25 (red. LC 1.152/2019): recuo frontal permitido p/ uni/bifamiliar, descoberta. Art. 28, I: vagas em fila toleradas. Art. 22, I: faixa única veículo+pedestre em unirresidencial.",
+    "obrigatoria": true,
+    "largura": 2.6,
+    "comprimento": 5.0,
+    "vagaPodeOcuparRecuoFrontal": true,
+    "impermeavel": true,
+    "notaImpermeavel": "conservador: a vaga desconta da área permeável; trocar para false se o piso for drenante"
+  },
+
+  "permeabilidade": {
+    "$origem": "Art. 17 (piso municipal 10%, alta); o campo da Ficha Técnica pode ser maior — vale o MAIOR dos dois",
+    "pisoMunicipal": 0.1
+  },
+
+  "acessibilidade": {
+    "$origem": "NBR 9050 — NÃO obrigatória para unifamiliar privada (Art. 100 só exige em uso público/coletivo). Camada OPCIONAL via flag casaAcessivel; nunca hard constraint padrão.",
+    "circuloGiro": 1.5,
+    "larguraCirculacaoMinima": 0.9,
+    "vaoLivrePortaMinimo": 0.8,
+    "ambientesPrincipais": ["sala", "cozinha", "quarto", "suite", "banho"]
+  }
+}

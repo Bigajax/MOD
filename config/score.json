@@ -1,0 +1,96 @@
+{
+  "$comentario": "Score do KISS v3. Bloco 'estatisticos' = termos do v2 (o que é frequente), bloco 'padroes' = A Pattern Language (o que é bom). Os dois rodam em paralelo (spec 2C). TODAS as faixas e pesos dos padrões são PROPOSTA DE PROJETO (confianca: baixa) — precisam de aprovação de arquiteto antes de entrar no score. A referência conceitual é Christopher Alexander, 'A Pattern Language' (Oxford, 1977), padrões citados por número.",
+
+  "estatisticos": {
+    "$comentario": "Termos já implementados no v2, calibráveis pelas favoritas.",
+    "hidraulica": 0.25,
+    "areaAlvo": 0.25,
+    "proximidade": 0.15,
+    "insolacao": 0.15,
+    "proporcao": 0.1,
+    "compacidade": 0.1
+  },
+
+  "padroes": {
+    "gradienteIntimidade": {
+      "padrao": 127,
+      "nome": "Intimacy Gradient",
+      "referencia": "Alexander, A Pattern Language (1977), padrão 127",
+      "medida": "Profundidade de cada cômodo no grafo de acessos, por BFS a partir da porta de entrada (nós = cômodos + circulações; arestas = portas). O gradiente é respeitado quando profundidade(social) < profundidade(circulação) < profundidade(íntimo).",
+      "formula": "score = (pares ordenados corretamente) / (total de pares social×íntimo), onde um par (s, i) está correto se prof(s) < prof(i). Social = sala, cozinha, varanda, lavabo; íntimo = quarto, suíte, banho.",
+      "faixa": {
+        "bom": ">= 0.9 (praticamente todos os íntimos mais fundos que os sociais)",
+        "ruim": "<= 0.5 (quarto tão raso quanto a sala)"
+      },
+      "pesoSugerido": 0.08,
+      "confianca": "baixa",
+      "conflitos": [
+        "Conflita DIRETAMENTE com o termo estatístico 'proximidade' do v2 (quartos perto da zona social pontuam mais). Alexander empurra o íntimo para o fundo; a estatística puxa para perto. Um arquiteto precisa arbitrar o equilíbrio — os dois com peso alto se anulam.",
+        "Em lote raso (bloco de fundos < 6 m) o gradiente completo não cabe; penalizar demais mata todas as variantes do lote."
+      ]
+    },
+
+    "luzDeDoisLados": {
+      "padrao": 159,
+      "nome": "Light on Two Sides of Every Room",
+      "referencia": "Alexander, A Pattern Language (1977), padrão 159",
+      "medida": "Para cada cômodo de permanência prolongada, contar faces com abertura POSSÍVEL (parede sem vizinho e fora de divisa — quando a parede de divisa existir no modelo, face de divisa não conta). Verificar se há >= 2 faces livres NÃO paralelas (canto).",
+      "formula": "score = (permanências com canto livre) / (total de permanências).",
+      "faixa": {
+        "bom": ">= 0.5 (metade dos cômodos de permanência em canto)",
+        "ruim": "0 (todos os cômodos com luz de um lado só)"
+      },
+      "pesoSugerido": 0.08,
+      "confianca": "baixa",
+      "conflitos": [
+        "Conflita com o termo estatístico 'compacidade' (menos perímetro por m²): cantos e recortes aumentam perímetro. Se compacidade pesar muito, este padrão nunca vence.",
+        "Conflita FRONTALMENTE com parede na divisa (recuo lateral zero): colar na divisa elimina uma face inteira de aberturas; cômodos grandes encostados na divisa podem reprovar no vão mínimo do código (2B). É o comportamento correto, não afrouxar.",
+        "Sinergia com o pátio da planta em L: o recorte cria cantos com luz — o padrão premia a família A′."
+      ]
+    },
+
+    "passagensCurtas": {
+      "padrao": 132,
+      "nome": "Short Passages",
+      "referencia": "Alexander, A Pattern Language (1977), padrão 132",
+      "medida": "Para cada cômodo tipo 'circulacao': comprimento (lado maior, em metros) e esbeltez (lado maior / lado menor).",
+      "formula": "score = media(f(comprimento) * g(esbeltez)) sobre as circulações; f = 1 até L_bom, decaindo linear até 0 em L_ruim; g = 1 até E_bom, decaindo até 0 em E_ruim. Sem circulação => 1.",
+      "faixa": {
+        "bom": "comprimento <= 4,5 m e esbeltez <= 5 (PROPOSTA — o livro argumenta corredores curtos, largos e com luz, sem fixar metros)",
+        "ruim": "comprimento >= 8 m ou esbeltez >= 8 (PROPOSTA)"
+      },
+      "pesoSugerido": 0.07,
+      "confianca": "baixa",
+      "conflitos": [
+        "Penaliza exatamente o partido que o gerador mais usa em lote fundo (família A, corredor espinha). Peso alto demais elimina a família A inteira em lote 10×25 — calibrar olhando variantes reais.",
+        "Corredor curto demais reduz área de parede interna útil para o vão das portas dos quartos (cada porta pede 0,80 m de parede na circulação)."
+      ]
+    },
+
+    "salaNoCoracao": {
+      "padrao": 129,
+      "nome": "Common Areas at the Heart",
+      "referencia": "Alexander, A Pattern Language (1977), padrão 129",
+      "medida": "Grau da sala no grafo de acessos: número de arestas (portas) ligando a sala a outros cômodos/circulações, incluindo a porta de entrada.",
+      "formula": "score = min(grau_da_sala, 4) / 4; sala folha (grau 1) = 0,25. Adicional: penalidade se a porta de entrada abre direto num quarto/corredor sem passar pela sala.",
+      "faixa": {
+        "bom": "grau >= 3 (entrada + cozinha + circulação)",
+        "ruim": "grau 1 (sala-corredor, todo mundo passa por fora dela)"
+      },
+      "pesoSugerido": 0.07,
+      "confianca": "baixa",
+      "conflitos": [
+        "Tensão com o gradienteIntimidade: se tudo liga na sala, os íntimos ficam rasos no grafo. O equilíbrio é a circulação nascer NA sala e os quartos nascerem NA circulação — que é o que o gerador atual já faz.",
+        "Nenhum conflito com a parede de divisa."
+      ]
+    },
+
+    "$criterioAceite7": "Após ligar os padrões, comparar o ranking das 6 variantes de um mesmo estudo antes/depois: a ordem DEVE mudar. Pesos sugeridos somam 0.30 contra 1.00 dos estatísticos — ponto de partida para a calibração 'blocos comparáveis' da spec 2C; ajustar com arquiteto."
+  },
+
+  "pendencias": [
+    "Todas as faixas numéricas dos 4 padrões são propostas de projeto (confianca baixa) — validar com arquiteto antes da Fase 2.",
+    "Arbitragem humana necessária: gradienteIntimidade × proximidade (v2) são opostos; definir qual manda ou reduzir o peso de 'proximidade'.",
+    "Definir se 'luzDeDoisLados' conta face para o pátio (recomendo sim) e para varanda coberta (recomendo não, sombreia)."
+  ]
+}

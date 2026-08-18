@@ -1,4 +1,4 @@
-import { criarClienteServidor } from "@/lib/supabase/server";
+﻿import { criarClienteServidor } from "@/lib/supabase/server";
 import { CarimboFolha } from "@/components/carimbo";
 import { brl, diasDesde } from "@/lib/format";
 import { Quadro, type CardOportunidade } from "./quadro";
@@ -34,7 +34,7 @@ export default async function ComercialPage() {
       <Quadro cards={cards} clientes={clientes.data ?? []} />
 
       <CarimboFolha
-        folha="02/04"
+        folha="02/05"
         celulas={[
           { rotulo: "Em jogo", valor: String(emJogo.length).padStart(2, "0") },
           { rotulo: "Em proposta", valor: brl(somaEmJogo) },

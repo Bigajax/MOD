@@ -1,4 +1,4 @@
-import { criarClienteServidor } from "@/lib/supabase/server";
+﻿import { criarClienteServidor } from "@/lib/supabase/server";
 import { TituloPagina } from "@/components/bloco";
 import { CarimboFolha } from "@/components/carimbo";
 import { QuadroProjetos, type ProjetoQuadro } from "./quadro-projetos";
@@ -31,11 +31,11 @@ export default async function ProjetosPage() {
     <div>
       <TituloPagina
         folha="03"
-        eyebrow="Produção"
+        eyebrow="ProduÃ§Ã£o"
         titulo="Projetos"
         acoes={
           <span className="text-[12px] text-tinta-fraca">
-            cada coluna é a etapa onde o projeto está parado
+            cada coluna Ã© a etapa onde o projeto estÃ¡ parado
           </span>
         }
       />
@@ -43,7 +43,7 @@ export default async function ProjetosPage() {
       <QuadroProjetos projetos={projetos} />
 
       <CarimboFolha
-        folha="03/04"
+        folha="03/05"
         celulas={[
           {
             rotulo: "Em carteira",

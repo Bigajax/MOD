@@ -1,0 +1,214 @@
+{
+  "lei": "Lei Complementar n. 1.045, de 23/03/2016 — Código de Edificações e Posturas Básicas de Maringá",
+  "textoUtilizado": "Texto original sancionado em 23/03/2016 (PDF fornecido pelo arquiteto)",
+  "ATENCAO": "Este texto NÃO está consolidado. Consta alteração pela LC n. 1.548, de 03/08/2026, vigente desde essa data. Conferir no SAPL da Câmara Municipal antes de congelar estes valores.",
+  "escopo": "Habitação unirresidencial isolada, até dois pavimentos (Art. 55, I, a; Art. 104)",
+
+  "classificacaoCompartimentos": {
+    "artigo": "Art. 77",
+    "confianca": "alta",
+    "permanenciaProlongada": ["sala", "cozinha", "quarto", "suite"],
+    "_nota": "Art. 77, I — 'salas e dependências destinadas ao preparo e consumo de alimentos, ao repouso, ao lazer, ao estudo e ao trabalho'",
+    "permanenciaTransitoria": ["circulacao", "banho", "lavabo", "servico", "closet", "garagem", "deposito"],
+    "_nota2": "Art. 77, II — lista explícita inclui circulações, banheiros, lavabos, lavanderias, garagens"
+  },
+
+  "programaMinimoObrigatorio": {
+    "artigo": "Art. 79; Art. 61",
+    "confianca": "alta",
+    "espacos": ["repouso", "preparo e consumo de alimentos", "instalacao sanitaria", "servico"],
+    "aparelhosSanitariosMinimos": ["lavatorio", "vaso sanitario", "chuveiro", "pia de cozinha", "tanque de lavar roupas"],
+    "reservatorioAguaPotavel": { "obrigatorio": true, "artigo": "Art. 65" }
+  },
+
+  "aberturas": {
+    "REGRA_CENTRAL": {
+      "artigo": "Art. 88, caput e §1º",
+      "confianca": "alta",
+      "paredeContiguaADivisa": {
+        "aberturasPermitidas": false,
+        "_texto": "Nas paredes contíguas às divisas não são admitidas NENHUM tipo de abertura — ventilação, iluminação ou acesso — em qualquer nível"
+      },
+      "paredeParalelaADivisa": {
+        "distanciaMinimaParaTerAbertura": 1.5,
+        "_texto": "Toda abertura em parede paralela à divisa guarda no mínimo 1,50 m dessa divisa"
+      },
+      "_implicacaoSolver": "faceComAberturaPermitida = (face não coincide com divisa) E (distância da face à divisa paralela >= 1,50 m). Uma casa a 1,20 m da divisa NÃO pode ter janela naquela face — e ainda perde área. Por isso o Art. 13 §1º proíbe valores intermediários."
+    },
+    "entreEdificacoesNoMesmoLote": {
+      "artigo": "Art. 88, §3º e §4º",
+      "confianca": "alta",
+      "ambasComAbertura": 3.0,
+      "apenasUmaComAbertura": 1.5
+    },
+    "permanenciaProlongada": {
+      "artigo": "Art. 86, caput",
+      "confianca": "alta",
+      "exigeVaoParaExterior": true,
+      "_texto": "Todos os compartimentos de permanência prolongada devem dispor de vãos de iluminação e ventilação abrindo para o exterior"
+    },
+    "permanenciaTransitoria": {
+      "artigo": "Art. 87",
+      "confianca": "alta",
+      "podeVentilarPorRecintoAdjacente": true,
+      "_implicacaoSolver": "Banho, lavabo e circulação PODEM ser internos, sem face externa. Isso libera muito o BSP — não force face externa para esses tipos."
+    },
+    "fracaoAreaPisoMinima": {
+      "valor": null,
+      "artigo": "Art. 86, §1º; Art. 8º; Art. 80; Art. 81",
+      "confianca": "n/a",
+      "_pendencia": "O Código NÃO fixa fração (1/6, 1/8 etc.). Remete a 'níveis mínimos de iluminância previstos nas NBR/ABNT' — requisito de desempenho em lux, não razão geométrica. Precisa de decisão do arquiteto: adotar 1/6 como padrão de projeto do escritório."
+    }
+  },
+
+  "iluminacaoVentilacaoPorPatioInterno": {
+    "artigo": "Art. 89, §1º",
+    "confianca": "alta",
+    "aplicavelA": "residencias",
+    "areaMinima": 3.0,
+    "circuloInscritoMinimo": 1.5
+  },
+
+  "implantacao": {
+    "recuoLateralEFundos": {
+      "artigo": "Art. 13, §1º",
+      "confianca": "alta",
+      "valoresPermitidos": [0, 1.5],
+      "valoresIntermediarios": "PROIBIDOS",
+      "condicao": "Aplica-se onde a Lei de Uso e Ocupação do Solo faculta o recuo lateral/de fundos, no caso de paredes sem abertura",
+      "_texto": "Deverá ser adotado recuo nulo, ou no mínimo recuo de 1,50 m, não sendo admitidos valores intermediários",
+      "_implicacaoSolver": "O recuo lateral é uma variável DISCRETA de dois estados, não contínua. Elimina toda a busca intermediária."
+    },
+    "recuoFrontalTaxaOcupacaoCoeficiente": {
+      "valor": null,
+      "artigo": "Art. 3º; Art. 13 caput; Art. 110",
+      "_pendencia": "NÃO estão nesta lei. Vêm da Lei Complementar de Uso e Ocupação do Solo, por zona, e são consultados lote a lote pela Ficha Técnica (Art. 110, validade de 90 dias). O sistema deve ter esses campos como INPUT do usuário, copiados da Ficha Técnica, nunca hardcoded."
+    },
+    "loteDeEsquina": {
+      "artigo": "Art. 15",
+      "confianca": "alta",
+      "chanfroPorTestada": 1.8,
+      "alturaLivre": 3.0,
+      "condicao": "Em zoneamento onde houver dispensa do recuo frontal",
+      "_nota": "Lote de esquina não tem fundo — as divisas opostas às testadas são consideradas laterais (Art. 10, def. 'Fundo do lote')"
+    },
+    "areaComputavel": {
+      "artigo": "Art. 83",
+      "confianca": "alta",
+      "regra": "Toda projeção no interior do terreno é computada como área construída, exceto beirais e marquises menores que 1,00 m"
+    }
+  },
+
+  "permeabilidade": {
+    "artigo": "Art. 17",
+    "confianca": "alta",
+    "minimoPercentualAreaLote": 10,
+    "_texto": "Área permeável mínima de 10% da área total do lote, livre de edificação, da projeção desta ou de avanço do subsolo",
+    "podeSerMaiorPorZona": true,
+    "_nota": "Art. 17, §1º — a Lei de Uso e Ocupação do Solo pode exigir percentual maior. Tratar 10% como piso, não como valor final."
+  },
+
+  "vagasDeAuto": {
+    "obrigatoriedade": {
+      "artigo": "Art. 23, caput",
+      "confianca": "alta",
+      "obrigatorio": true,
+      "_texto": "Todas as edificações deverão ter áreas destinadas à garagem ou estacionamento de veículos, não podendo receber outra destinação"
+    },
+    "quantidadeEDimensao": {
+      "valor": null,
+      "artigo": "Art. 23, §1º",
+      "_pendencia": "Remetido a NRM específica, que não consta desta lei. Buscar NRM publicada ou adotar padrão do escritório (2,50 × 5,00 m) com aprovação do arquiteto."
+    },
+    "cobertura": {
+      "artigo": "Art. 24",
+      "confianca": "alta",
+      "podeSerCobertaOuDescoberta": true
+    },
+    "vagaNoRecuoFrontal": {
+      "artigo": "Art. 25",
+      "confianca": "media",
+      "permitidoExplicitamentePara": "edificações comerciais, desde que não coberta",
+      "_pendencia": "O Art. 25 fala apenas de edificações COMERCIAIS no texto original de 2016. Ver 'verificacaoSAPL' abaixo: no texto consolidado, a redação da LC 1.152/2019 estende expressamente a residenciais uni/bifamiliares (descoberta)."
+    },
+    "vagasDependentes": {
+      "artigo": "Art. 28, I",
+      "confianca": "alta",
+      "toleradasEm": "residências isoladas ou justapostas",
+      "_implicacaoSolver": "Duas vagas podem ficar EM FILA, não precisam ser lado a lado. Economiza 2,50 m de testada."
+    },
+    "circulacaoVeiculosVsPedestres": {
+      "artigo": "Art. 22, I",
+      "confianca": "alta",
+      "exigeSeparacao": false,
+      "_texto": "As faixas de acesso de veículos são independentes das de pedestres, EXCETO em edificações unirresidencial e multirresidencial limitadas a duas unidades",
+      "_implicacaoSolver": "Para casa unifamiliar, vaga e acesso de pedestre PODEM compartilhar a mesma faixa. Relaxa a regra 2.2 do KISS v2."
+    },
+    "rebaixamentoDeGuiaEmEsquina": {
+      "artigo": "Art. 18, §2º",
+      "confianca": "alta",
+      "distanciaMinimaDaConfluencia": 3.0
+    },
+    "giroDePortoes": {
+      "artigo": "Art. 35, §2º",
+      "confianca": "alta",
+      "regra": "O giro de portões de veículos ou pedestres deve se desenvolver integralmente dentro dos limites do lote"
+    }
+  },
+
+  "dimensoesDeCompartimentos": {
+    "valor": null,
+    "artigo": "Art. 8º; Art. 80; Art. 81",
+    "_pendencia": "O Código NÃO fixa área mínima nem dimensão mínima por tipo de cômodo. Art. 8º declara que 'as dimensões mínimas de compartimentos e equipamentos encontram-se normatizados por Normas Técnicas Brasileiras'. Art. 80 exige apenas compatibilidade com o uso. Fonte real para o teste de mobiliário continua sendo Neufert + decisão do escritório."
+  },
+
+  "fossaSeptica": {
+    "artigo": "Art. 69",
+    "confianca": "alta",
+    "distanciaMinimaDasDivisasLateraisEFundo": 2.5,
+    "aplicavelQuando": "ausência de rede pública de esgoto (Art. 66, §1º)"
+  },
+
+  "prevalenciaNormativa": {
+    "artigo": "Art. 1º, §1º",
+    "regra": "Havendo mais de uma norma sobre o mesmo assunto, prevalece o PARÂMETRO MAIS RESTRITIVO",
+    "_implicacaoSolver": "Quando código municipal, NBR e padrão do escritório divergirem, o validador aplica o mais restritivo dos três."
+  },
+
+  "verificacaoSAPL": {
+    "$oQueE": "Conferência feita em 2026-08-18 no texto COMPILADO oficial do SAPL da Câmara de Maringá (sapl.cmm.pr.gov.br/ta/130/text — 'vigência a partir de 3 de Agosto de 2026, dada por LC 1.548/2026'). Resolve pendências do texto original acima; toda entrada com URL e confiança alta.",
+    "lc1548de2026": {
+      "resolvido": true,
+      "achado": "A LC 1.548/2026 altera APENAS o § 1º do art. 31 (reparação de calçadas danificadas por obras de órgãos/companhias públicas ou privadas). NÃO tocou os arts. 13, 17, 23, 25 ou 88. Última alteração anterior: LC 1.537/2026, também sobre o art. 31.",
+      "url": "https://sapl.cmm.pr.gov.br/norma/15259?display",
+      "confianca": "alta"
+    },
+    "art25RecuoFrontal": {
+      "resolvido": true,
+      "achado": "No texto consolidado, o Art. 25 tem redação dada pela LC 1.152/2019 e autoriza o uso do recuo frontal para estacionamento em: I – edificações empresariais; II – edificações residenciais UNIFAMILIARES ou BIFAMILIARES; III – desde que o estacionamento não seja coberto. A flag vagaPodeOcuparRecuoFrontal=true tem base legal direta (descoberta).",
+      "trechoLiteral": "Art. 25. O recuo obrigatório do alinhamento predial, poderá ser utilizado para estacionamento de veículos, atendidos os seguintes requisitos: I – estejam localizadas em edificações empresariais; II – estejam localizadas em edificações residenciais unifamiliares ou bifamiliares; III – o estacionamento não poderá ser coberto.",
+      "url": "https://sapl.cmm.pr.gov.br/ta/130/text",
+      "confianca": "alta"
+    },
+    "nrmDeVagas": {
+      "resolvido": "parcial",
+      "achado": "A NRM E-10003 FOI publicada (Lei ordinária 10.257/2016, texto atual consolidado até a Lei 11.834/2024): habitações isoladas = mínimo 1 vaga por unidade (item 3.2.1.a); largura mínima 2,60 m (1 vaga), 2,50 m (2 vagas), 2,40 m (3+ entre obstáculos); comprimento mínimo 4,50 m (itens 3.4.1-3.4.2). O padrão do escritório 2,50 × 5,00 m é MAIS restritivo que o legal (2,60 × 4,50 para vaga única) — pela regra do Art. 1º §1º, vale o do escritório se adotado.",
+      "url": "https://sapl.cmm.pr.gov.br/ta/1534/text",
+      "confianca": "alta"
+    },
+    "referenciaLUOS": {
+      "$nota": "NÃO substitui a Ficha Técnica (Art. 110) — o formulário continua exigindo os valores lote a lote. Registrado apenas como referência para conferência do preenchimento.",
+      "achado": "LUOS vigente = LC 1.468/2024 (Anexo II na redação da LC 1.513/2025). ZR1/ZR2 residencial: recuo frontal 3,00 m; TO 70% (térreo e 2º pav.); CA 1,4; permeabilidade 10%; laterais/fundos até 2 pav.: SEM abertura = dispensado, COM abertura = 1,50 m.",
+      "url": "https://sapl.cmm.pr.gov.br/ta/946/text",
+      "confianca": "alta"
+    }
+  },
+
+  "pendencias": [
+    { "item": "Recuo frontal, taxa de ocupação, coeficiente de aproveitamento, permeabilidade por zona", "fonte": "Lei Complementar de Uso e Ocupação do Solo de Maringá", "criticidade": "bloqueante", "acao": "Entram pela Ficha Técnica como INPUT (spec 2A). Valores de referência ZR1/ZR2 registrados em verificacaoSAPL.referenciaLUOS apenas para conferência." },
+    { "item": "Texto consolidado até a LC 1.548/2026", "fonte": "SAPL — Câmara Municipal de Maringá", "criticidade": "resolvida", "acao": "Verificado em 2026-08-18: a LC 1.548 só altera o art. 31 §1º (calçadas). Ver verificacaoSAPL.lc1548de2026." },
+    { "item": "Quantidade e dimensão de vaga", "fonte": "NRM E-10003 (Lei 10.257/2016)", "criticidade": "resolvida-parcial", "acao": "NRM localizada (ver verificacaoSAPL.nrmDeVagas). Decisão de arquiteto: manter 2,50 × 5,00 do escritório (mais restritivo) ou adotar os mínimos legais." },
+    { "item": "Fração mínima de vão de iluminação", "fonte": "Não existe no Código — remetido a desempenho em lux via NBR", "criticidade": "alta", "acao": "DECISÃO DE ARQUITETO: adotar 1/6 da área do piso como padrão do escritório (spec 2F: default 1/6 em config, rotulado como padrão do escritório)." },
+    { "item": "Área e dimensão mínima por tipo de cômodo", "fonte": "Não existe no Código", "criticidade": "alta", "acao": "DECISÃO DE ARQUITETO: validar a tabela de mobiliário (config/mobiliario.json — NBR 15575 Anexo G + Neufert 5ª ed., já levantada com fonte por número)." }
+  ]
+}

@@ -7,10 +7,11 @@ import { usePathname } from "next/navigation";
    igual às abas de layout do CAD. A cor de cada aba é a da capa de destaque
    correspondente no Instagram da MOD. */
 const FOLHAS = [
-  { href: "/hoje", rotulo: "Hoje", secao: "hoje", num: "01/04" },
-  { href: "/comercial", rotulo: "Comercial", secao: "comercial", num: "02/04" },
-  { href: "/projetos", rotulo: "Projetos", secao: "projetos", num: "03/04" },
-  { href: "/clientes", rotulo: "Clientes", secao: "clientes", num: "04/04" },
+  { href: "/hoje", rotulo: "Hoje", secao: "hoje" },
+  { href: "/comercial", rotulo: "Comercial", secao: "comercial" },
+  { href: "/projetos", rotulo: "Projetos", secao: "projetos" },
+  { href: "/clientes", rotulo: "Clientes", secao: "clientes" },
+  { href: "/estudo", rotulo: "Estudo", secao: "estudo" },
 ];
 
 export function secaoDaRota(pathname: string) {
@@ -41,7 +42,6 @@ export function AbasFolha() {
             className="aba"
           >
             <span className="aba-int">
-              <span className="aba-num">{folha.num}</span>
               <span className="aba-nome">{folha.rotulo}</span>
             </span>
           </Link>

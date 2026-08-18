@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { criarClienteServidor } from "@/lib/supabase/server";
 import { Bloco, TituloPagina } from "@/components/bloco";
 import { CarimboFolha } from "@/components/carimbo";
@@ -15,9 +15,9 @@ import {
   ROTULO_COMERCIAL,
   ROTULO_PARCELA,
 } from "@/lib/format";
-/* O cartão de pendência: miniatura do cartão de cor do manual — cabeça no
-   fundo da família com os anéis no canto direito e o nome na cor, corpo em
-   papel, pé de carimbo com duas células. Ferrugem na cabeça = atraso. */
+/* O cartÃ£o de pendÃªncia: miniatura do cartÃ£o de cor do manual â€” cabeÃ§a no
+   fundo da famÃ­lia com os anÃ©is no canto direito e o nome na cor, corpo em
+   papel, pÃ© de carimbo com duas cÃ©lulas. Ferrugem na cabeÃ§a = atraso. */
 function Cartao({
   href,
   cor,
@@ -77,7 +77,7 @@ function Cartao({
   );
 }
 
-/** A grade dos cartões de uma seção. */
+/** A grade dos cartÃµes de uma seÃ§Ã£o. */
 function Cartoes({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid gap-3 pt-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -109,7 +109,7 @@ export default async function HojePage() {
     supabase
       .from("etapas")
       .select("id, nome, prazo, status, projeto_id, projetos(nome)")
-      // Aprovada também é estado terminal: etapa aprovada não é pendência.
+      // Aprovada tambÃ©m Ã© estado terminal: etapa aprovada nÃ£o Ã© pendÃªncia.
       .not("status", "in", "(concluida,aprovada)")
       .not("prazo", "is", null)
       .lte("prazo", emDias(hoje, 7))
@@ -180,7 +180,7 @@ export default async function HojePage() {
 
   const vencidas = daSemana.filter((e) => diasAte(e.prazo) < 0).length;
 
-  /* Uma linha só: o que precisa de atenção, sem prefixo e sem manual de uso. */
+  /* Uma linha sÃ³: o que precisa de atenÃ§Ã£o, sem prefixo e sem manual de uso. */
   const partes: string[] = [];
   if (followups.length > 0)
     partes.push(
@@ -205,7 +205,7 @@ export default async function HojePage() {
       <p className="mt-5 text-[14px] text-tinta-media">{resumo}</p>
 
       <CarimboFolha
-        folha="01/04"
+        folha="01/05"
         celulas={[
           {
             rotulo: "Esperando retorno",
@@ -256,8 +256,8 @@ export default async function HojePage() {
                   parado <= 0
                     ? "falou hoje"
                     : parado === 1
-                      ? "há 1 dia"
-                      : `há ${parado} dias`
+                      ? "hÃ¡ 1 dia"
+                      : `hÃ¡ ${parado} dias`
                 }
                 urgente={urgente}
               />
@@ -270,7 +270,7 @@ export default async function HojePage() {
         titulo="Prazos da semana"
         cor="argila"
         contagem={daSemana.length}
-        vazio="Nada vencendo nos próximos 7 dias."
+        vazio="Nada vencendo nos prÃ³ximos 7 dias."
       >
         <Cartoes>
           {daSemana.map((e) => {
@@ -283,12 +283,12 @@ export default async function HojePage() {
                 nome={e.projetos?.nome ?? "Projeto"}
                 detalhe={
                   e.status === "aguardando_aprovacao"
-                    ? `${e.nome} — parado no cliente`
+                    ? `${e.nome} â€” parado no cliente`
                     : e.nome
                 }
                 rotuloEsq="Prazo"
                 valorEsq={dataCurta(e.prazo)}
-                rotuloDir="Situação"
+                rotuloDir="SituaÃ§Ã£o"
                 valorDir={prazoRelativo(e.prazo)}
                 urgente={atrasada}
               />

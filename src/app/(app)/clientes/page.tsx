@@ -1,4 +1,4 @@
-import { criarClienteServidor } from "@/lib/supabase/server";
+﻿import { criarClienteServidor } from "@/lib/supabase/server";
 import { TituloPagina } from "@/components/bloco";
 import { CarimboFolha } from "@/components/carimbo";
 import { brl } from "@/lib/format";
@@ -24,7 +24,7 @@ export default async function ClientesPage() {
       <TabelaClientes clientes={clientes} />
 
       <CarimboFolha
-        folha="04/04"
+        folha="04/05"
         celulas={[
           {
             rotulo: "Cadastrados",
@@ -37,7 +37,7 @@ export default async function ClientesPage() {
             ).padStart(2, "0"),
           },
           {
-            rotulo: "Só no funil",
+            rotulo: "SÃ³ no funil",
             valor: String(
               clientes.filter(
                 (c) =>

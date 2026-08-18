@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Selo } from "@/components/bloco";
 import { Valor, FolhaBranca } from "@/components/valor";
 import { Rolagem } from "@/components/rolagem";
@@ -29,14 +29,14 @@ function concluida(e: EtapaProjeto) {
   return e.status === "aprovada" || e.status === "concluida";
 }
 
-/** Onde o projeto está: a primeira etapa que ainda não fechou. */
+/** Onde o projeto estÃ¡: a primeira etapa que ainda nÃ£o fechou. */
 function etapaAtual(p: ProjetoQuadro) {
   const ordenadas = [...p.etapas].sort((a, b) => a.ordem - b.ordem);
   return ordenadas.find((e) => !concluida(e)) ?? null;
 }
 
 export function QuadroProjetos({ projetos }: { projetos: ProjetoQuadro[] }) {
-  // As colunas são as etapas que existem de verdade nos contratos abertos,
+  // As colunas sÃ£o as etapas que existem de verdade nos contratos abertos,
   // na ordem do template. Nada de coluna vazia inventada.
   const porColuna = new Map<string, { ordem: number; itens: ProjetoQuadro[] }>();
 
@@ -57,7 +57,7 @@ export function QuadroProjetos({ projetos }: { projetos: ProjetoQuadro[] }) {
   if (projetos.length === 0) {
     return (
       <div className="mt-8">
-        <FolhaBranca folha="03/04">
+        <FolhaBranca folha="03/05">
           Nenhum projeto ainda. Eles nascem quando uma oportunidade vai para{" "}
           <Link href="/comercial" className="text-tinta underline underline-offset-2">
             Ganho
@@ -129,7 +129,7 @@ function CardProjeto({ projeto }: { projeto: ProjetoQuadro }) {
           {projeto.nome}
         </p>
         <p className="mt-1 truncate text-[12px] text-tinta-media">
-          {projeto.clientes?.nome ?? "—"} ·{" "}
+          {projeto.clientes?.nome ?? "â€”"} Â·{" "}
           {ROTULO_TIPO[projeto.tipo_projeto] ?? projeto.tipo_projeto}
         </p>
 
@@ -149,7 +149,7 @@ function CardProjeto({ projeto }: { projeto: ProjetoQuadro }) {
 
       </div>
 
-      {/* pé de carimbo */}
+      {/* pÃ© de carimbo */}
       <div className="grid grid-cols-2 border-t border-tinta">
         <div className="border-r border-tinta px-3 py-1.5">
           <p className="carimbo-rot">Contrato</p>
